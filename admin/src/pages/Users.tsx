@@ -82,7 +82,7 @@ export function UsersPage() {
     },
   ];
 
-  const hasFilters = activeFilter !== 'all' || createdFrom || createdTo || updatedBefore;
+  const hasFilters = activeFilter !== 'all' || createdFrom || createdTo || updatedBefore || usernameFilter;
 
   return (
     <div>
@@ -115,6 +115,16 @@ export function UsersPage() {
           <DatePicker value={updatedBefore} onChange={setUpdatedBefore} format="DD.MM.YYYY" placeholder="раньше чем" />
         </Col>
         <Col>
+          <div style={{ fontSize: 12, color: '#888', marginBottom: 4 }}>Username</div>
+          <Input
+            value={usernameFilter}
+            onChange={(e) => setUsernameFilter(e.target.value)}
+            placeholder="@username"
+            allowClear
+            style={{ width: 150 }}
+          />
+        </Col>
+        <Col>
           {hasFilters && (
             <Button
               onClick={() => {
@@ -122,6 +132,7 @@ export function UsersPage() {
                 setCreatedFrom(null);
                 setCreatedTo(null);
                 setUpdatedBefore(null);
+                setUsernameFilter('');
               }}
             >
               Сбросить
