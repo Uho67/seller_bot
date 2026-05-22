@@ -24,7 +24,7 @@ import { BackupModule } from './modules/backup/backup.module';
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
         type: 'better-sqlite3',
-        database: join(__dirname, '..', 'database.sqlite'),
+        database: join(__dirname, '..', 'data', 'database.sqlite'),
         entities: [join(__dirname, '**', '*.entity{.ts,.js}')],
         synchronize: true,
       }),
