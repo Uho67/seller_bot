@@ -30,10 +30,16 @@ import { BackupModule } from './modules/backup/backup.module';
       }),
       inject: [ConfigService],
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
-      serveRoot: '/uploads',
-    }),
+    ServeStaticModule.forRoot(
+      {
+        rootPath: join(__dirname, '..', 'uploads'),
+        serveRoot: '/uploads',
+      },
+      {
+        rootPath: join(__dirname, '..', 'public'),
+        exclude: ['/api*', '/uploads*'],
+      },
+    ),
     DatabaseModule,
     AuthModule,
     ProductsModule,
