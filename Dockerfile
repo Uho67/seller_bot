@@ -21,6 +21,6 @@ WORKDIR /app
 COPY --from=backend-builder /app/node_modules ./node_modules
 COPY --from=backend-builder /app/dist ./dist
 COPY --from=admin-builder /admin/dist ./public
-RUN mkdir -p uploads data
+RUN mkdir -p uploads data backups
 EXPOSE 3009
 CMD ["node", "dist/main.js"]

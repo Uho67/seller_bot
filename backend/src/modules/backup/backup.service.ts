@@ -4,8 +4,8 @@ import { join } from 'path';
 import { existsSync, mkdirSync, readdirSync, statSync, unlinkSync } from 'fs';
 import Database from 'better-sqlite3';
 
-const DB_PATH = join(__dirname, '..', '..', '..', 'database.sqlite');
-const BACKUP_DIR = join(__dirname, '..', '..', '..', 'db_backups');
+const DB_PATH = join(__dirname, '..', '..', '..', 'data', 'database.sqlite');
+const BACKUP_DIR = join(__dirname, '..', '..', '..', 'backups');
 const MAX_AGE_MS = 2 * 24 * 60 * 60 * 1000;
 
 @Injectable()

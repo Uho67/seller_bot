@@ -9,6 +9,7 @@ services:
       - "3009:3009"
     volumes:
       - ./backend/data:/app/data
+      - ./backend/backups:/app/backups
       - ./backend/uploads:/app/uploads
     env_file:
       - ./backend/.env
