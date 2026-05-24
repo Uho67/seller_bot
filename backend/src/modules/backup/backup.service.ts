@@ -1,16 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import { join } from 'path';
 import { existsSync, mkdirSync, readdirSync, statSync, unlinkSync } from 'fs';
-import Database from 'better-sqlite3';
 
-const DB_PATH = join(__dirname, '..', '..', '..', 'data', 'database.sqlite');
 const BACKUP_DIR = join(__dirname, '..', '..', '..', 'backups');
 const MAX_AGE_MS = 2 * 24 * 60 * 60 * 1000;
 
 @Injectable()
 export class BackupService {
   private readonly logger = new Logger(BackupService.name);
+
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
   @Cron(CronExpression.EVERY_DAY_AT_2AM)
   async runBackup() {
@@ -22,13 +24,11 @@ export class BackupService {
     const backupPath = join(BACKUP_DIR, `database_${timestamp}.sqlite`);
 
     try {
-      const db = new Database(DB_PATH, { readonly: true });
-      await db.backup(backupPath);
-      db.close();
+      await this.dataSource.query(`VACUUM INTO '${backupPath}'`);
       this.logger.log(`Backup created: ${backupPath}`);
       this.removeOldBackups();
     } catch (err) {
-      this.logger.error(`Backup failed — old backups preserved: ${err.message}`);
+      this.logger.error(`Backup failed: ${err.message}`);
     }
   }
 
