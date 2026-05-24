@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const client = axios.create({ baseURL: '/pachka/api' });
+const BASE = import.meta.env.VITE_BASE_PATH || '/pachka';
+const client = axios.create({ baseURL: `${BASE}/api` });
 
 client.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
@@ -13,7 +14,7 @@ client.interceptors.response.use(
   (err) => {
     if (err.response?.status === 401) {
       localStorage.removeItem('token');
-      window.location.href = '/pachka/login';
+      window.location.href = `${BASE}/login`;
     }
     return Promise.reject(err);
   },

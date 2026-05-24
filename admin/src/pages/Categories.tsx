@@ -59,7 +59,7 @@ export function Categories() {
     {
       title: 'Фото', dataIndex: 'image', key: 'image', width: 70,
       render: (img: string) => img
-        ? <Image src={`/uploads/${img}`} width={48} height={48} style={{ objectFit: 'cover' }} />
+        ? <Image src={`${import.meta.env.VITE_BASE_PATH || '/pachka'}/uploads/${img}`} width={48} height={48} style={{ objectFit: 'cover' }} />
         : '—',
     },
     { title: 'Название', dataIndex: 'name', key: 'name', minWidth: 120 },
