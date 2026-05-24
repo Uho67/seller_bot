@@ -6,11 +6,9 @@ import { ProductPost } from './product-post.entity';
 export enum CategoryType {
   CUSTOM = 'custom',
   CATALOG = 'catalog',
-  ALL_PRODUCTS = 'all_products',
-  KING_SIZE = 'king_size',
-  SLIMS = 'slims',
-  DEMY = 'demy',
-  BF = 'bf',
+  RIDINA = 'ridina',
+  POD = 'pod',
+  CARTRIDZH = 'cartridzh',
 }
 
 @Entity('category_post')
@@ -32,6 +30,9 @@ export class CategoryPost {
 
   @Column({ type: 'simple-enum', enum: CategoryType, default: CategoryType.CUSTOM })
   type: CategoryType;
+
+  @Column({ default: 0 })
+  order: number;
 
   @ManyToMany(() => ProductPost, (p) => p.categories, { eager: false })
   products: ProductPost[];

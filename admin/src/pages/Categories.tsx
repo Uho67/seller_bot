@@ -8,8 +8,7 @@ import { ImageUpload } from '../components/ImageUpload';
 const { useBreakpoint } = Grid;
 
 const TYPE_LABELS: Record<string, string> = {
-  catalog: 'Каталог', all_products: 'Все фото', king_size: 'Толстые',
-  slims: 'Слимс', demy: 'Деми', bf: 'БФ', custom: 'Custom',
+  catalog: 'Каталог', ridina: 'Ridina', pod: 'Pods', cartridzh: 'Cartr', custom: 'Custom',
 };
 
 export function Categories() {
@@ -29,6 +28,7 @@ export function Categories() {
       const fd = new FormData();
       fd.append('name', values.name);
       if (values.description) fd.append('description', values.description);
+      if (values.order !== undefined) fd.append('order', String(values.order));
       if (imageFile) fd.append('image', imageFile);
       return modal.record
         ? categoriesApi.update(modal.record.id, fd)
@@ -50,7 +50,7 @@ export function Categories() {
   });
 
   const openEdit = (record: any) => {
-    form.setFieldsValue({ name: record.name, description: record.description });
+    form.setFieldsValue({ name: record.name, description: record.description, order: record.order ?? 0 });
     setImageFile(null);
     setModal({ open: true, record });
   };
@@ -63,6 +63,7 @@ export function Categories() {
         : '—',
     },
     { title: 'Название', dataIndex: 'name', key: 'name', minWidth: 120 },
+    { title: 'Порядок', dataIndex: 'order', key: 'order', width: 80 },
     {
       title: 'Тип', dataIndex: 'type', key: 'type', width: 100,
       render: (t: string) => <Tag color={t === 'custom' ? 'blue' : 'green'}>{TYPE_LABELS[t] || t}</Tag>,
@@ -116,6 +117,9 @@ export function Categories() {
           </Form.Item>
           <Form.Item name="description" label="Описание">
             <Input.TextArea rows={3} />
+          </Form.Item>
+          <Form.Item name="order" label="Порядок">
+            <Input type="number" />
           </Form.Item>
           <Form.Item label="Фото">
             <ImageUpload currentImage={modal.record?.image} onChange={setImageFile} />

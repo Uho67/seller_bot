@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CategoryPost, CategoryType } from '../entities/category-post.entity';
+import { ProductPost } from '../entities/product-post.entity';
 import { WelcomePost } from '../entities/welcome-post.entity';
 import { SalePost } from '../entities/sale-post.entity';
 import { Admin } from '../entities/admin.entity';
@@ -15,6 +16,7 @@ import { ChannelButton } from '../entities/channel-button.entity';
 export class SeederService implements OnModuleInit {
   constructor(
     @InjectRepository(CategoryPost) private categoryRepo: Repository<CategoryPost>,
+    @InjectRepository(ProductPost) private productRepo: Repository<ProductPost>,
     @InjectRepository(WelcomePost) private welcomeRepo: Repository<WelcomePost>,
     @InjectRepository(SalePost) private saleRepo: Repository<SalePost>,
     @InjectRepository(Admin) private adminRepo: Repository<Admin>,
@@ -26,6 +28,7 @@ export class SeederService implements OnModuleInit {
 
   async onModuleInit() {
     await this.seedCategories();
+    await this.seedProducts();
     await this.seedSingletons();
     await this.seedButtons();
     await this.seedAdmin();
@@ -33,18 +36,37 @@ export class SeederService implements OnModuleInit {
 
   private async seedCategories() {
     const defaults = [
-      { type: CategoryType.CATALOG, name: 'Каталог' },
-      { type: CategoryType.ALL_PRODUCTS, name: 'Усi фото' },
-      { type: CategoryType.KING_SIZE, name: 'Товстi' },
-      { type: CategoryType.SLIMS, name: 'Слiмс' },
-      { type: CategoryType.DEMY, name: 'Демi' },
-      { type: CategoryType.BF, name: 'БФ' },
+      { type: CategoryType.CATALOG, name: 'Каталог', order: 0 },
+      { type: CategoryType.RIDINA, name: 'Ridina', order: 1 },
+      { type: CategoryType.POD, name: 'Pods', order: 2 },
+      { type: CategoryType.CARTRIDZH, name: 'Cartr', order: 3 },
     ];
 
     for (const cat of defaults) {
       const exists = await this.categoryRepo.findOne({ where: { type: cat.type } });
       if (!exists) {
         await this.categoryRepo.save(this.categoryRepo.create(cat));
+      }
+    }
+  }
+
+  private async seedProducts() {
+    const ridinaCat = await this.categoryRepo.findOne({ where: { type: CategoryType.RIDINA } });
+    if (!ridinaCat) return;
+
+    const defaults = [
+      { name: 'Chaser', order: 1 },
+      { name: 'Chaser LUX', order: 2 },
+      { name: 'Chaser MINT', order: 3 },
+      { name: 'Elfliq', order: 4 },
+    ];
+
+    for (const p of defaults) {
+      const exists = await this.productRepo.findOne({ where: { name: p.name } });
+      if (!exists) {
+        const product = this.productRepo.create({ name: p.name, order: p.order, is_enabled: true });
+        product.categories = [ridinaCat];
+        await this.productRepo.save(product);
       }
     }
   }

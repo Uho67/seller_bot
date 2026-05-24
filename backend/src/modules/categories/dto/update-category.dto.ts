@@ -1,4 +1,5 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class UpdateCategoryDto {
   @IsOptional()
@@ -8,4 +9,9 @@ export class UpdateCategoryDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  order?: number;
 }

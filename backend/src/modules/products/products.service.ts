@@ -26,7 +26,7 @@ export class ProductsService {
   }
 
   findAllEnabled() {
-    return this.repo.find({ where: { is_enabled: true }, relations: ['categories'] });
+    return this.repo.find({ where: { is_enabled: true }, relations: ['categories'], order: { order: 'ASC' } });
   }
 
   async findEnabledByCategory(categoryId: number) {
@@ -34,6 +34,7 @@ export class ProductsService {
       .createQueryBuilder('p')
       .innerJoin('p.categories', 'c', 'c.id = :categoryId', { categoryId })
       .where('p.is_enabled = :enabled', { enabled: true })
+      .orderBy('p.order', 'ASC')
       .getMany();
   }
 
@@ -42,6 +43,7 @@ export class ProductsService {
       name: dto.name,
       description: dto.description,
       is_enabled: dto.is_enabled ?? true,
+      order: dto.order ?? 0,
       image: imagePath,
     });
 
@@ -67,6 +69,7 @@ export class ProductsService {
       ...(dto.name !== undefined && { name: dto.name }),
       ...(dto.description !== undefined && { description: dto.description }),
       ...(dto.is_enabled !== undefined && { is_enabled: dto.is_enabled }),
+      ...(dto.order !== undefined && { order: dto.order }),
       ...(imagePath && { image: imagePath, telegram_file_id: null }),
     });
 

@@ -7,9 +7,7 @@ import { ProductsService } from '../../products/products.service';
 import { ButtonsService } from '../../buttons/buttons.service';
 import { CategoryType } from '../../../database/entities/category-post.entity';
 import {
-  buildOrderButtonRow,
   buildAdminButtonInline,
-  buildChannelButtonInline,
   buildMainMenuButtonInline,
   buildProductGrid,
   buildSalePostButton,
@@ -32,7 +30,7 @@ export class CatalogUpdate {
   async onCatalog(@Ctx() ctx: Context) {
     try { await (ctx as any).answerCbQuery(); } catch {}
     try {
-      const [catalogCat, allCategories, salePost, buttons] = await Promise.all([
+      const [catalogCat, categories, salePost, buttons] = await Promise.all([
         this.categoriesService.findByType(CategoryType.CATALOG),
         this.categoriesService.findAllExceptCatalog(),
         this.salePostService.get(),
@@ -44,29 +42,16 @@ export class CatalogUpdate {
       const saleBtn = buildSalePostButton(salePost);
       if (saleBtn) keyboard.push([saleBtn]);
 
-      const orderBtn = buildOrderButtonRow(buttons.order);
-      if (orderBtn) keyboard.push([orderBtn]);
-
-      const allProductsCat = allCategories.find((c) => c.type === CategoryType.ALL_PRODUCTS);
-      if (allProductsCat) {
-        keyboard.push([{ text: allProductsCat.name, callback_data: 'all_products' }]);
-      }
-
-      const otherCats = allCategories.filter((c) => c.type !== CategoryType.ALL_PRODUCTS);
-      for (let i = 0; i < otherCats.length; i += 2) {
-        const row: any[] = [{ text: otherCats[i].name, callback_data: `category_${otherCats[i].id}` }];
-        if (otherCats[i + 1]) {
-          row.push({ text: otherCats[i + 1].name, callback_data: `category_${otherCats[i + 1].id}` });
+      for (let i = 0; i < categories.length; i += 2) {
+        const row: any[] = [{ text: categories[i].name, callback_data: `category_${categories[i].id}` }];
+        if (categories[i + 1]) {
+          row.push({ text: categories[i + 1].name, callback_data: `category_${categories[i + 1].id}` });
         }
         keyboard.push(row);
       }
 
-      const adminChannelRow: any[] = [];
       const adminBtn = buildAdminButtonInline(buttons.admin);
-      if (adminBtn) adminChannelRow.push(adminBtn);
-      const channelBtn = buildChannelButtonInline(buttons.channel);
-      if (channelBtn) adminChannelRow.push(channelBtn);
-      if (adminChannelRow.length) keyboard.push(adminChannelRow);
+      if (adminBtn) keyboard.push([adminBtn]);
 
       keyboard.push([buildMainMenuButtonInline(buttons.mainMenu)]);
 
@@ -105,31 +90,6 @@ export class CatalogUpdate {
       keyboard.push([buildMainMenuButtonInline(buttons.mainMenu)]);
 
       await sendOrEditWithMedia(ctx, null, 'Оберіть товар:', keyboard);
-    } catch (err: any) {
-      if (err?.response?.error_code === 403) {
-        await this.usersService.setInactive(String(ctx.from?.id));
-      }
-    }
-  }
-
-  @Action('all_products')
-  async onAllProducts(@Ctx() ctx: Context) {
-    try { await (ctx as any).answerCbQuery(); } catch {}
-    try {
-      const [products, buttons] = await Promise.all([
-        this.productsService.findAllEnabled(),
-        this.buttonsService.getAll(),
-      ]);
-
-      const keyboard: any[][] = [...buildProductGrid(products, 'all')];
-
-      const adminBtn = buildAdminButtonInline(buttons.admin);
-      if (adminBtn) keyboard.push([adminBtn]);
-
-      keyboard.push([{ text: '⬅️ Повернутися', callback_data: 'catalog' }]);
-      keyboard.push([buildMainMenuButtonInline(buttons.mainMenu)]);
-
-      await sendOrEditWithMedia(ctx, null, 'Всі товари:', keyboard);
     } catch (err: any) {
       if (err?.response?.error_code === 403) {
         await this.usersService.setInactive(String(ctx.from?.id));

@@ -7,9 +7,8 @@ import { CategoriesService } from '../../categories/categories.service';
 import { ButtonsService } from '../../buttons/buttons.service';
 import { CategoryType } from '../../../database/entities/category-post.entity';
 import {
-  buildOrderButtonRow,
+  buildAdminButtonInline,
   buildChannelButtonInline,
-  buildMainMenuButtonInline,
   buildSalePostButton,
   getImagePath,
   sendOrEditWithMedia,
@@ -41,26 +40,25 @@ export class MainMenuUpdate {
 
   async renderMainMenu(ctx: Context) {
     try {
-      const [welcomePost, salePost, buttons] = await Promise.all([
+      const [welcomePost, catalogCat, salePost, buttons] = await Promise.all([
         this.welcomePostService.get(),
+        this.categoriesService.findByType(CategoryType.CATALOG),
         this.salePostService.get(),
         this.buttonsService.getAll(),
       ]);
 
       const keyboard: any[][] = [];
 
+      keyboard.push([{ text: catalogCat?.name || 'Каталог', callback_data: 'catalog' }]);
+
       const saleBtn = buildSalePostButton(salePost);
       if (saleBtn) keyboard.push([saleBtn]);
 
-      const catalogCat = await this.categoriesService.findByType(CategoryType.CATALOG);
-      keyboard.push([{ text: catalogCat?.name || 'Каталог', callback_data: 'catalog' }]);
+      const adminBtn = buildAdminButtonInline(buttons.admin);
+      if (adminBtn) keyboard.push([adminBtn]);
 
-      const bottomRow = [];
-      const orderBtn = buildOrderButtonRow(buttons.order);
-      if (orderBtn) bottomRow.push(orderBtn);
       const channelBtn = buildChannelButtonInline(buttons.channel);
-      if (channelBtn) bottomRow.push(channelBtn);
-      if (bottomRow.length) keyboard.push(bottomRow);
+      if (channelBtn) keyboard.push([channelBtn]);
 
       const caption = welcomePost?.description || 'Ласкаво просимо!';
       const imagePath = getImagePath(welcomePost?.image);

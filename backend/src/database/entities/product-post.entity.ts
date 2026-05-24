@@ -23,6 +23,9 @@ export class ProductPost {
   @Column({ default: true })
   is_enabled: boolean;
 
+  @Column({ default: 0 })
+  order: number;
+
   @ManyToMany(() => CategoryPost, (cat) => cat.products, { eager: false })
   @JoinTable({ name: 'product_category' })
   categories: CategoryPost[];

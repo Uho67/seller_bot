@@ -15,6 +15,11 @@ export class CreateProductDto {
   is_enabled?: boolean;
 
   @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  order?: number;
+
+  @IsOptional()
   @Transform(({ value }) => {
     if (typeof value === 'string') return JSON.parse(value);
     return value;

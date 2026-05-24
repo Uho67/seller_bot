@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeederService } from './seeds/seeder.service';
 import { CategoryPost } from './entities/category-post.entity';
+import { ProductPost } from './entities/product-post.entity';
 import { WelcomePost } from './entities/welcome-post.entity';
 import { SalePost } from './entities/sale-post.entity';
 import { Admin } from './entities/admin.entity';
@@ -13,7 +14,7 @@ import { ChannelButton } from './entities/channel-button.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      CategoryPost, WelcomePost, SalePost, Admin,
+      CategoryPost, ProductPost, WelcomePost, SalePost, Admin,
       OrderButton, AdminButton, MainMenuButton, ChannelButton,
     ]),
   ],

@@ -31,6 +31,7 @@ export class CategoriesService {
     return this.repo
       .createQueryBuilder('c')
       .where('c.type != :type', { type: CategoryType.CATALOG })
+      .orderBy('c.order', 'ASC')
       .getMany();
   }
 
@@ -40,6 +41,7 @@ export class CategoriesService {
       description: dto.description,
       type: CategoryType.CUSTOM,
       image: imagePath,
+      order: dto.order ?? 0,
     });
     return this.repo.save(cat);
   }
@@ -56,6 +58,7 @@ export class CategoriesService {
     Object.assign(cat, {
       ...(dto.name !== undefined && { name: dto.name }),
       ...(dto.description !== undefined && { description: dto.description }),
+      ...(dto.order !== undefined && { order: dto.order }),
       ...(imagePath && { image: imagePath, telegram_file_id: null }),
     });
     return this.repo.save(cat);
