@@ -1,0 +1,15 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: siga_bot
+    restart: unless-stopped
+    ports:
+      - "3009:3009"
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/backups:/app/backups
+      - ./backend/uploads:/app/uploads
+    env_file:
+      - ./backend/.env

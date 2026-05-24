@@ -55,8 +55,6 @@ export class MainMenuUpdate {
       const catalogCat = await this.categoriesService.findByType(CategoryType.CATALOG);
       keyboard.push([{ text: catalogCat?.name || 'Каталог', callback_data: 'catalog' }]);
 
-      if (saleBtn) keyboard.push([{ text: salePost.name, callback_data: 'sale_post' }]);
-
       const bottomRow = [];
       const orderBtn = buildOrderButtonRow(buttons.order);
       if (orderBtn) bottomRow.push(orderBtn);

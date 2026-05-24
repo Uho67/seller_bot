@@ -18,7 +18,7 @@ export default function App() {
   return (
     <ConfigProvider locale={ukUA}>
       <AuthProvider>
-        <BrowserRouter>
+        <BrowserRouter basename="/pachka">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route

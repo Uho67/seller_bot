@@ -1,0 +1,7 @@
+backend/node_modules
+backend/dist
+backend/.env
+backend/database.sqlite
+backend/uploads
+admin/node_modules
+admin/dist
