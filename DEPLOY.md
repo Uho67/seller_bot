@@ -126,7 +126,7 @@ sudo systemctl reload nginx
 ## 8. Redeploy after changes
 
 ```bash
-cd /var/www/pachka
+cd /var/www/siga_first
 git pull
 docker compose up -d --build
 ```
