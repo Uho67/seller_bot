@@ -130,6 +130,17 @@ function UsersList() {
     });
   };
 
+  const confirmDeleteAll = () => {
+    Modal.confirm({
+      title: `Удалить всех ${filteredUsers.length} пользователей?`,
+      content: 'Это действие нельзя отменить.',
+      okText: 'Удалить всех',
+      okButtonProps: { danger: true },
+      cancelText: 'Отмена',
+      onOk: () => deleteManyMutation.mutate(filteredUsers.map((u: any) => u.id)),
+    });
+  };
+
   return (
     <div>
       <Row gutter={[12, 12]} style={{ marginBottom: 16 }} align="bottom">
@@ -205,6 +216,15 @@ function UsersList() {
             Удалить выбранных ({selectedIds.length})
           </Button>
         )}
+        <Button
+          danger
+          icon={<DeleteOutlined />}
+          disabled={filteredUsers.length === 0}
+          loading={deleteManyMutation.isPending}
+          onClick={confirmDeleteAll}
+        >
+          Удалить всех ({filteredUsers.length})
+        </Button>
       </Space>
 
       <Table
