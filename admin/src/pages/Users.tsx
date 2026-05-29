@@ -43,7 +43,7 @@ function UsersList() {
     },
     onSuccess: (r) => {
       qc.invalidateQueries({ queryKey: ['mailouts'] });
-      message.success(`Отправлено: ${r.data.sent}, Ошибок: ${r.data.failed}`);
+      message.success(`В очереди: ${r.data.queued}`);
       setModalOpen(false);
       form.resetFields();
     },

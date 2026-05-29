@@ -130,8 +130,24 @@ export class MailoutService {
         }
 
         const post = postCache.get(key);
+        if (!post) {
+          this.logger.error(`[mailout #${record.id}] Post not found: type=${record.post_type} id=${record.post_id} — skipping record`);
+        }
         const cachedFileId = fileIdCache.get(key) ?? post?.telegram_file_id ?? null;
-        const keyboard = this.senderService.buildKeyboard(record.post_type, buttons, catalogCat);
+
+        let keyboard: any[][];
+        try {
+          keyboard = this.senderService.buildKeyboard(record.post_type, buttons, catalogCat);
+        } catch (err: any) {
+          this.logger.error(
+            `[mailout #${record.id}] buildKeyboard failed: post_type=${record.post_type} buttons=${JSON.stringify(buttons)} catalogCat=${JSON.stringify(catalogCat)} — ${err?.message ?? err}`,
+            err?.stack,
+          );
+          record.is_sent = true;
+          failed++;
+          await this.mailoutRepo.save(record);
+          continue;
+        }
 
         try {
           const { msgId, fileId } = await this.senderService.sendPost(record.chat_id, post, cachedFileId, keyboard);
@@ -143,7 +159,13 @@ export class MailoutService {
           record.message_id = String(msgId);
           sent++;
         } catch (err: any) {
-          if (err?.response?.error_code === 403) {
+          const tgCode = err?.response?.error_code;
+          const tgDesc = err?.response?.description;
+          this.logger.error(
+            `[mailout #${record.id}] sendPost failed: chat_id=${record.chat_id} post_type=${record.post_type} post_id=${record.post_id}${tgCode ? ` tg_error=${tgCode} "${tgDesc}"` : ''} — ${err?.message ?? err}`,
+            err?.stack,
+          );
+          if (tgCode === 403) {
             await this.usersService.setInactive(record.chat_id);
           }
           record.is_sent = true;
