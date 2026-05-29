@@ -75,18 +75,18 @@ export async function sendOrEditWithMedia(
       let msg: any;
       if ((ctx as any).callbackQuery) {
         msg = await (ctx as any).editMessageMedia(
-          { type: 'photo', media: buildMedia(), caption },
+          { type: 'photo', media: buildMedia(), caption, parse_mode: 'HTML' },
           { reply_markup },
         );
       } else {
-        msg = await ctx.replyWithPhoto(buildMedia() as any, { caption, reply_markup });
+        msg = await ctx.replyWithPhoto(buildMedia() as any, { caption, reply_markup, parse_mode: 'HTML' });
       }
       if (!telegramFileId && onFileIdCaptured) {
         const fid = extractFileId(msg);
         if (fid) await onFileIdCaptured(fid);
       }
     } catch {
-      const msg = await ctx.replyWithPhoto(buildMedia() as any, { caption, reply_markup });
+      const msg = await ctx.replyWithPhoto(buildMedia() as any, { caption, reply_markup, parse_mode: 'HTML' });
       if (!telegramFileId && onFileIdCaptured) {
         const fid = extractFileId(msg);
         if (fid) await onFileIdCaptured(fid);
@@ -95,12 +95,12 @@ export async function sendOrEditWithMedia(
   } else {
     try {
       if ((ctx as any).callbackQuery) {
-        await (ctx as any).editMessageText(caption || '​', { reply_markup });
+        await (ctx as any).editMessageText(caption || '​', { reply_markup, parse_mode: 'HTML' });
       } else {
-        await ctx.reply(caption || '​', { reply_markup });
+        await ctx.reply(caption || '​', { reply_markup, parse_mode: 'HTML' });
       }
     } catch {
-      await ctx.reply(caption || '​', { reply_markup });
+      await ctx.reply(caption || '​', { reply_markup, parse_mode: 'HTML' });
     }
   }
 }

@@ -67,7 +67,7 @@ export class MailoutSenderService {
     const reply_markup = { inline_keyboard: keyboard };
 
     if (cachedFileId) {
-      const res = await this.bot.telegram.sendPhoto(chatId, cachedFileId, { caption, reply_markup });
+      const res = await this.bot.telegram.sendPhoto(chatId, cachedFileId, { caption, reply_markup, parse_mode: 'HTML' });
       return { msgId: res.message_id, fileId: null };
     }
 
@@ -77,7 +77,7 @@ export class MailoutSenderService {
         const res = await this.bot.telegram.sendPhoto(
           chatId,
           { source: fs.createReadStream(imagePath) },
-          { caption, reply_markup },
+          { caption, reply_markup, parse_mode: 'HTML' },
         );
         const fileId =
           Array.isArray(res.photo) && res.photo.length > 0
@@ -87,7 +87,7 @@ export class MailoutSenderService {
       }
     }
 
-    const res = await this.bot.telegram.sendMessage(chatId, caption || 'Post', { reply_markup });
+    const res = await this.bot.telegram.sendMessage(chatId, caption || 'Post', { reply_markup, parse_mode: 'HTML' });
     return { msgId: res.message_id, fileId: null };
   }
 }
