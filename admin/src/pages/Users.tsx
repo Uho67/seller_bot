@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import {
-  Table, Tag, Typography, DatePicker, Select, Button, Space, Modal, Form, message, Row, Col, Input,
+  Table, Tag, Typography, DatePicker, Select, Button, Space, Modal, Form, message,
+  Row, Col, Input, Tabs, Upload, Popconfirm,
 } from 'antd';
-import { SendOutlined } from '@ant-design/icons';
+import { SendOutlined, DeleteOutlined, InboxOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs, { Dayjs } from 'dayjs';
 import { usersApi } from '../api/users';
@@ -11,7 +12,7 @@ import { mailoutApi } from '../api/mailout';
 
 type ActiveFilter = 'all' | 'active' | 'inactive';
 
-export function UsersPage() {
+function UsersList() {
   const qc = useQueryClient();
   const [form] = Form.useForm();
 
@@ -22,6 +23,7 @@ export function UsersPage() {
   const [usernameFilter, setUsernameFilter] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [postType, setPostType] = useState<string>('product');
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ['users'],
@@ -46,6 +48,25 @@ export function UsersPage() {
       form.resetFields();
     },
     onError: () => message.error('Ошибка'),
+  });
+
+  const deleteOneMutation = useMutation({
+    mutationFn: (id: number) => usersApi.deleteOne(id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['users'] });
+      message.success('Пользователь удалён');
+    },
+    onError: () => message.error('Ошибка удаления'),
+  });
+
+  const deleteManyMutation = useMutation({
+    mutationFn: (ids: number[]) => usersApi.deleteMany(ids),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['users'] });
+      setSelectedIds([]);
+      message.success('Пользователи удалены');
+    },
+    onError: () => message.error('Ошибка удаления'),
   });
 
   const filteredUsers = users.filter((u: any) => {
@@ -80,14 +101,37 @@ export function UsersPage() {
       title: 'Обновлено', dataIndex: 'updated_at', key: 'updated_at', width: 110,
       render: (v: string) => new Date(v).toLocaleDateString('ru-RU'),
     },
+    {
+      title: '', key: 'actions', width: 60,
+      render: (_: any, r: any) => (
+        <Popconfirm
+          title="Удалить пользователя?"
+          okText="Да"
+          cancelText="Нет"
+          okButtonProps={{ danger: true }}
+          onConfirm={() => deleteOneMutation.mutate(r.id)}
+        >
+          <Button size="small" danger icon={<DeleteOutlined />} />
+        </Popconfirm>
+      ),
+    },
   ];
 
   const hasFilters = activeFilter !== 'all' || createdFrom || createdTo || updatedBefore || usernameFilter;
 
+  const confirmDeleteMany = () => {
+    Modal.confirm({
+      title: `Удалить ${selectedIds.length} пользователей?`,
+      content: 'Это действие нельзя отменить.',
+      okText: 'Удалить',
+      okButtonProps: { danger: true },
+      cancelText: 'Отмена',
+      onOk: () => deleteManyMutation.mutate(selectedIds),
+    });
+  };
+
   return (
     <div>
-      <Typography.Title level={3}>Пользователи</Typography.Title>
-
       <Row gutter={[12, 12]} style={{ marginBottom: 16 }} align="bottom">
         <Col>
           <div style={{ fontSize: 12, color: '#888', marginBottom: 4 }}>Статус</div>
@@ -151,6 +195,16 @@ export function UsersPage() {
         >
           Отправить отфильтрованным ({filteredUsers.length})
         </Button>
+        {selectedIds.length > 0 && (
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            loading={deleteManyMutation.isPending}
+            onClick={confirmDeleteMany}
+          >
+            Удалить выбранных ({selectedIds.length})
+          </Button>
+        )}
       </Space>
 
       <Table
@@ -160,6 +214,10 @@ export function UsersPage() {
         loading={isLoading}
         scroll={{ x: 'max-content' }}
         size="small"
+        rowSelection={{
+          selectedRowKeys: selectedIds,
+          onChange: (keys) => setSelectedIds(keys as number[]),
+        }}
       />
 
       <Modal
@@ -200,6 +258,68 @@ export function UsersPage() {
           </Button>
         </Form>
       </Modal>
+    </div>
+  );
+}
+
+function ImportTab() {
+  const qc = useQueryClient();
+  const [result, setResult] = useState<{ inserted: number; skipped: number } | null>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleUpload = async (file: File) => {
+    setUploading(true);
+    setResult(null);
+    try {
+      const r = await usersApi.importCsv(file);
+      setResult(r.data);
+      qc.invalidateQueries({ queryKey: ['users'] });
+    } catch {
+      message.error('Ошибка импорта');
+    } finally {
+      setUploading(false);
+    }
+    return false;
+  };
+
+  return (
+    <div style={{ maxWidth: 500 }}>
+      {!result ? (
+        <Upload.Dragger
+          accept=".csv"
+          showUploadList={false}
+          beforeUpload={handleUpload}
+          disabled={uploading}
+        >
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">Нажмите или перетащите CSV файл</p>
+          <p className="ant-upload-hint">Формат: id, name, username, chat_id, status, ...</p>
+        </Upload.Dragger>
+      ) : (
+        <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+          <Typography.Title level={4} style={{ margin: 0 }}>Импорт завершён</Typography.Title>
+          <Typography.Text>Добавлено: <strong>{result.inserted}</strong></Typography.Text>
+          <Typography.Text>Пропущено (дубликаты): <strong>{result.skipped}</strong></Typography.Text>
+          <Button onClick={() => setResult(null)}>Загрузить другой файл</Button>
+        </Space>
+      )}
+    </div>
+  );
+}
+
+export function UsersPage() {
+  return (
+    <div>
+      <Typography.Title level={3}>Пользователи</Typography.Title>
+      <Tabs
+        defaultActiveKey="list"
+        items={[
+          { key: 'list', label: 'Список', children: <UsersList /> },
+          { key: 'import', label: 'Импорт', children: <ImportTab /> },
+        ]}
+      />
     </div>
   );
 }

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { User } from '../../database/entities/user.entity';
+import { parse } from 'csv-parse/sync';
 
 @Injectable()
 export class UsersService {
@@ -49,5 +50,49 @@ export class UsersService {
 
   count() {
     return this.repo.count();
+  }
+
+  async deleteOne(id: number) {
+    await this.repo.delete(id);
+  }
+
+  async deleteMany(ids: number[]) {
+    if (ids.length === 0) return;
+    await this.repo.delete({ id: In(ids) });
+  }
+
+  async importFromCsv(buffer: Buffer): Promise<{ inserted: number; skipped: number }> {
+    const records: Record<string, string>[] = parse(buffer, {
+      columns: true,
+      skip_empty_lines: true,
+      trim: true,
+    });
+
+    const existingChatIds = new Set(
+      (await this.repo.find({ select: ['chat_id'] })).map((u) => u.chat_id),
+    );
+
+    let inserted = 0;
+    let skipped = 0;
+
+    for (const row of records) {
+      const chat_id = row['chat_id'];
+      if (!chat_id || existingChatIds.has(chat_id)) {
+        skipped++;
+        continue;
+      }
+
+      const nameParts = (row['name'] || '').trim().split(/\s+/);
+      const first_name = nameParts[0] || undefined;
+      const last_name = nameParts.length > 1 ? nameParts.slice(1).join(' ') : undefined;
+      const user_name = row['username'] || undefined;
+      const is_active = (row['status'] || '').toLowerCase() === 'active';
+
+      await this.repo.save(this.repo.create({ chat_id, first_name, last_name, user_name, is_active }));
+      existingChatIds.add(chat_id);
+      inserted++;
+    }
+
+    return { inserted, skipped };
   }
 }
