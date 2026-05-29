@@ -3,10 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: siga_bot
+    container_name: siga_first_bot
     restart: unless-stopped
     ports:
-      - "3009:3009"
+      - "3008:3008"
     volumes:
       - ./backend/data:/app/data
       - ./backend/backups:/app/backups
