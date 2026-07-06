@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const Database = require('better-sqlite3');
 const path = require('path');
 const readline = require('readline');

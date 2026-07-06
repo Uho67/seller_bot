@@ -2,10 +2,10 @@
 
 ## Stack
 
-- **Backend**: NestJS, port `8`
+- **Backend**: NestJS, port `3007`
 - **Admin panel**: React (Vite) — built inside Docker, served by the backend at `/`
 - **Web server**: Nginx (reverse proxy)
-- **Domain**: `https://uho.kharkiv.ua/siga`
+- **Domain**: `https://uho.kharkiv.ua/flow`
 - **Runtime**: Docker (single container for backend + admin)
 
 ---
@@ -35,7 +35,7 @@ cd pachka
 Create `/var/www/pachka/backend/.env`:
 
 ```env
-PORT=3008
+PORT=3007
 BOT_TOKEN=your_telegram_bot_token_here
 JWT_SECRET=some_long_random_secret
 ADMIN_PANEL_ORIGIN=https://uho.kharkiv.ua
@@ -56,8 +56,8 @@ Verify:
 
 ```bash
 docker compose ps
-curl http://localhost:3008/api
-curl http://localhost:3008          # should return admin panel HTML
+curl http://localhost:3007/api
+curl http://localhost:3007          # should return admin panel HTML
 ```
 
 View logs:
@@ -72,7 +72,7 @@ docker compose logs -f
 
 Since the Docker container serves both the admin panel and the API, nginx only needs to proxy everything to the container.
 
-Create `/etc/nginx/sites-available/siga`:
+Create `/etc/nginx/sites-available/flow`:
 
 ```nginx
 server {
@@ -80,9 +80,9 @@ server {
     server_name uho.kharkiv.ua;
 
     # Proxy everything to the Docker container
-    location /siga/ {
-        rewrite ^/siga/(.*)$ /$1 break;
-        proxy_pass http://localhost:3008;
+    location /flow/ {
+        rewrite ^/flow/(.*)$ /$1 break;
+        proxy_pass http://localhost:3007;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -95,7 +95,7 @@ server {
 Enable and test:
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/siga /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/flow /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -116,10 +116,10 @@ sudo systemctl reload nginx
 
 | Resource        | URL                                      |
 |-----------------|------------------------------------------|
-| Admin panel     | `https://uho.kharkiv.ua/siga/`        |
-| REST API        | `https://uho.kharkiv.ua/siga/api/`    |
-| Uploaded images | `https://uho.kharkiv.ua/siga/uploads/`|
-| Container direct| `http://localhost:3008` (internal only)  |
+| Admin panel     | `https://uho.kharkiv.ua/flow/`        |
+| REST API        | `https://uho.kharkiv.ua/flow/api/`    |
+| Uploaded images | `https://uho.kharkiv.ua/flow/uploads/`|
+| Container direct| `http://localhost:3007` (internal only)  |
 
 ---
 

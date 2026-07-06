@@ -6,7 +6,7 @@ services:
     container_name: siga_first_bot
     restart: unless-stopped
     ports:
-      - "3008:3008"
+      - "3007:3007"
     volumes:
       - ./backend/data:/app/data
       - ./backend/backups:/app/backups
