@@ -86,10 +86,14 @@ export async function sendOrEditWithMedia(
         if (fid) await onFileIdCaptured(fid);
       }
     } catch {
-      const msg = await ctx.replyWithPhoto(buildMedia() as any, { caption, reply_markup, parse_mode: 'HTML' });
-      if (!telegramFileId && onFileIdCaptured) {
-        const fid = extractFileId(msg);
-        if (fid) await onFileIdCaptured(fid);
+      if (imagePath) {
+        const msg = await ctx.replyWithPhoto({ source: fs.createReadStream(imagePath) }, { caption, reply_markup, parse_mode: 'HTML' });
+        if (onFileIdCaptured) {
+          const fid = extractFileId(msg);
+          if (fid) await onFileIdCaptured(fid);
+        }
+      } else {
+        await ctx.reply(caption || '​', { reply_markup, parse_mode: 'HTML' });
       }
     }
   } else {

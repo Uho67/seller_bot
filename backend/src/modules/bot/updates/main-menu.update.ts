@@ -70,6 +70,7 @@ export class MainMenuUpdate {
         welcomePost ? (id) => this.welcomePostService.updateTelegramFileId(welcomePost.id, id) : undefined,
       );
     } catch (err: any) {
+      console.error('[renderMainMenu] error:', err?.message ?? err);
       if (err?.response?.error_code === 403) {
         await this.usersService.setInactive(String(ctx.from?.id));
       }
