@@ -2,7 +2,7 @@
 
 ## Admin CLI
 
-Manage admin accounts for the siga_bot admin panel.
+Manage admin accounts for the flow_bot admin panel.
 
 ### Without Docker (local development)
 
@@ -39,28 +39,28 @@ npm run admin -- delete alice
 
 ### With Docker
 
-The container is named `siga_bot`. Run the CLI inside it with `docker exec`:
+The container is named `flow_bot`. Run the CLI inside it with `docker exec`:
 
 ```bash
 # List all admins
-docker exec siga_bot node scripts/admin-cli.js list
+docker exec flow_bot node scripts/admin-cli.js list
 
 # Create a new admin
-docker exec siga_bot node scripts/admin-cli.js create <name> <password>
+docker exec flow_bot node scripts/admin-cli.js create <name> <password>
 
 # Change an admin's password
-docker exec siga_bot node scripts/admin-cli.js update-password <name> <new-password>
+docker exec flow_bot node scripts/admin-cli.js update-password <name> <new-password>
 
 # Delete an admin
-docker exec siga_bot node scripts/admin-cli.js delete <name>
+docker exec flow_bot node scripts/admin-cli.js delete <name>
 ```
 
 **Examples:**
 
 ```bash
-docker exec siga_bot node scripts/admin-cli.js create alice secret123
-docker exec siga_bot node scripts/admin-cli.js update-password admin newpassword
-docker exec siga_bot node scripts/admin-cli.js delete alice
+docker exec flow_bot node scripts/admin-cli.js create alice secret123
+docker exec flow_bot node scripts/admin-cli.js update-password admin newpassword
+docker exec flow_bot node scripts/admin-cli.js delete alice
 ```
 
 > Inside the container the database is at `/app/data/database.sqlite` and is mounted from `./backend/data/` on the host, so changes persist across restarts.

@@ -25,14 +25,14 @@ sudo systemctl enable --now docker
 ```bash
 cd /var/www
 git clone <your-repo-url> siga_first
-cd pachka
+cd siga_first
 ```
 
 ---
 
 ## 3. Backend environment
 
-Create `/var/www/pachka/backend/.env`:
+Create `/var/www/siga_first/backend/.env`:
 
 ```env
 PORT=3007
@@ -46,7 +46,7 @@ ADMIN_PANEL_ORIGIN=https://uho.kharkiv.ua
 ## 4. Build and start (one command)
 
 ```bash
-cd /var/www/pachka
+cd /var/www/siga_first
 docker compose up -d --build
 ```
 
