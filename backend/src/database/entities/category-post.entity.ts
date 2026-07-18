@@ -33,6 +33,9 @@ export class CategoryPost {
   @Column({ type: 'simple-enum', enum: CategoryType, default: CategoryType.CUSTOM })
   type: CategoryType;
 
+  @Column({ default: true })
+  is_enabled: boolean;
+
   @ManyToMany(() => ProductPost, (p) => p.categories, { eager: false })
   products: ProductPost[];
 }

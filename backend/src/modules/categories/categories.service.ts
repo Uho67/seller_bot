@@ -31,6 +31,7 @@ export class CategoriesService {
     return this.repo
       .createQueryBuilder('c')
       .where('c.type != :type', { type: CategoryType.CATALOG })
+      .andWhere('c.is_enabled = :enabled', { enabled: true })
       .getMany();
   }
 
@@ -56,6 +57,7 @@ export class CategoriesService {
     Object.assign(cat, {
       ...(dto.name !== undefined && { name: dto.name }),
       ...(dto.description !== undefined && { description: dto.description }),
+      ...(dto.is_enabled !== undefined && { is_enabled: dto.is_enabled }),
       ...(imagePath && { image: imagePath, telegram_file_id: null }),
     });
     return this.repo.save(cat);
@@ -63,8 +65,9 @@ export class CategoriesService {
 
   async remove(id: number) {
     const cat = await this.findById(id);
-    if (cat.type !== CategoryType.CUSTOM) {
-      throw new ForbiddenException('Cannot delete built-in categories');
+    const PROTECTED = [CategoryType.CATALOG, CategoryType.ALL_PRODUCTS];
+    if (PROTECTED.includes(cat.type)) {
+      throw new ForbiddenException('Cannot delete this category');
     }
     if (cat.image) this.deleteImageFile(cat.image);
     await this.repo.remove(cat);

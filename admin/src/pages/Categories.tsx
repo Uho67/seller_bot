@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Table, Button, Space, Modal, Form, Input, message, Tag, Image, Typography, Grid } from 'antd';
+import { Table, Button, Space, Modal, Form, Input, message, Tag, Image, Typography, Grid, Switch } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { categoriesApi } from '../api/categories';
@@ -49,6 +49,18 @@ export function Categories() {
     onError: (e: any) => message.error(e.response?.data?.message || 'Ошибка'),
   });
 
+  const toggleMutation = useMutation({
+    mutationFn: ({ id, is_enabled }: { id: number; is_enabled: boolean }) => {
+      const fd = new FormData();
+      fd.append('is_enabled', String(is_enabled));
+      return categoriesApi.update(id, fd);
+    },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['categories'] }); },
+    onError: () => message.error('Ошибка'),
+  });
+
+  const TOGGLE_TYPES = ['catalog', 'all_products'];
+
   const openEdit = (record: any) => {
     form.setFieldsValue({ name: record.name, description: record.description });
     setImageFile(null);
@@ -72,7 +84,13 @@ export function Categories() {
       render: (_: any, rec: any) => (
         <Space size="small">
           <Button size="small" icon={<EditOutlined />} onClick={() => openEdit(rec)} />
-          {rec.type === 'custom' && (
+          {TOGGLE_TYPES.includes(rec.type) ? (
+            <Switch
+              size="small"
+              checked={rec.is_enabled}
+              onChange={(checked) => toggleMutation.mutate({ id: rec.id, is_enabled: checked })}
+            />
+          ) : (
             <Button size="small" danger icon={<DeleteOutlined />} onClick={() =>
               Modal.confirm({ title: 'Удалить?', onOk: () => deleteMutation.mutate(rec.id) })
             } />
