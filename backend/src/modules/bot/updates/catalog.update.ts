@@ -85,7 +85,8 @@ export class CatalogUpdate {
       const match = (ctx as any).match;
       const categoryId = parseInt(match[1], 10);
 
-      const [products, buttons] = await Promise.all([
+      const [category, products, buttons] = await Promise.all([
+        this.categoriesService.findById(categoryId),
         this.productsService.findEnabledByCategory(categoryId),
         this.buttonsService.getAll(),
       ]);
@@ -98,7 +99,13 @@ export class CatalogUpdate {
       keyboard.push([{ text: '⬅️ Повернутися', callback_data: 'catalog' }]);
       keyboard.push([buildMainMenuButtonInline(buttons.mainMenu)]);
 
-      await sendOrEditWithMedia(ctx, null, 'Оберіть товар:', keyboard);
+      const caption = category?.description || category?.name || 'Оберіть товар:';
+      const imagePath = getImagePath(category?.image);
+
+      await sendOrEditWithMedia(ctx, imagePath, caption, keyboard,
+        category?.telegram_file_id,
+        category ? (id) => this.categoriesService.updateTelegramFileId(category.id, id) : undefined,
+      );
     } catch (err: any) {
       if (err?.response?.error_code === 403) {
         await this.usersService.setInactive(String(ctx.from?.id));

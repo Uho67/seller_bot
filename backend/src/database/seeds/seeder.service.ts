@@ -35,10 +35,6 @@ export class SeederService implements OnModuleInit {
     const defaults = [
       { type: CategoryType.CATALOG, name: 'Каталог' },
       { type: CategoryType.ALL_PRODUCTS, name: 'Усi фото' },
-      { type: CategoryType.KING_SIZE, name: 'Товстi' },
-      { type: CategoryType.SLIMS, name: 'Слiмс' },
-      { type: CategoryType.DEMY, name: 'Демi' },
-      { type: CategoryType.BF, name: 'БФ' },
     ];
 
     for (const cat of defaults) {
