@@ -9,7 +9,6 @@ import { CategoryType } from '../../../database/entities/category-post.entity';
 import {
   buildOrderButtonRow,
   buildAdminButtonInline,
-  buildChannelButtonInline,
   buildMainMenuButtonInline,
   buildProductGrid,
   buildSalePostButton,
@@ -41,32 +40,27 @@ export class CatalogUpdate {
 
       const keyboard: any[][] = [];
 
-      const saleBtn = buildSalePostButton(salePost);
-      if (saleBtn) keyboard.push([saleBtn]);
-
-      const orderBtn = buildOrderButtonRow(buttons.order);
-      if (orderBtn) keyboard.push([orderBtn]);
-
-      const allProductsCat = allCategories.find((c) => c.type === CategoryType.ALL_PRODUCTS);
-      if (allProductsCat) {
-        keyboard.push([{ text: allProductsCat.name, callback_data: 'all_products' }]);
-      }
-
-      const otherCats = allCategories.filter((c) => c.type !== CategoryType.ALL_PRODUCTS);
-      for (let i = 0; i < otherCats.length; i += 2) {
-        const row: any[] = [{ text: otherCats[i].name, callback_data: `category_${otherCats[i].id}` }];
-        if (otherCats[i + 1]) {
-          row.push({ text: otherCats[i + 1].name, callback_data: `category_${otherCats[i + 1].id}` });
+      for (let i = 0; i < allCategories.length; i += 2) {
+        const cat = allCategories[i];
+        const catCb = cat.type === CategoryType.ALL_PRODUCTS ? 'all_products' : `category_${cat.id}`;
+        const row: any[] = [{ text: cat.name, callback_data: catCb }];
+        if (allCategories[i + 1]) {
+          const cat2 = allCategories[i + 1];
+          const cat2Cb = cat2.type === CategoryType.ALL_PRODUCTS ? 'all_products' : `category_${cat2.id}`;
+          row.push({ text: cat2.name, callback_data: cat2Cb });
         }
         keyboard.push(row);
       }
 
-      const adminChannelRow: any[] = [];
+      const saleBtn = buildSalePostButton(salePost);
+      if (saleBtn) keyboard.push([saleBtn]);
+
+      const orderAdminRow: any[] = [];
+      const orderBtn = buildOrderButtonRow(buttons.order);
+      if (orderBtn) orderAdminRow.push(orderBtn);
       const adminBtn = buildAdminButtonInline(buttons.admin);
-      if (adminBtn) adminChannelRow.push(adminBtn);
-      const channelBtn = buildChannelButtonInline(buttons.channel);
-      if (channelBtn) adminChannelRow.push(channelBtn);
-      if (adminChannelRow.length) keyboard.push(adminChannelRow);
+      if (adminBtn) orderAdminRow.push(adminBtn);
+      if (orderAdminRow.length) keyboard.push(orderAdminRow);
 
       keyboard.push([buildMainMenuButtonInline(buttons.mainMenu)]);
 

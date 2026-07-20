@@ -8,6 +8,7 @@ import { ButtonsService } from '../../buttons/buttons.service';
 import { CategoryType } from '../../../database/entities/category-post.entity';
 import {
   buildOrderButtonRow,
+  buildAdminButtonInline,
   buildChannelButtonInline,
   buildMainMenuButtonInline,
   buildSalePostButton,
@@ -49,18 +50,21 @@ export class MainMenuUpdate {
 
       const keyboard: any[][] = [];
 
-      const saleBtn = buildSalePostButton(salePost);
-      if (saleBtn) keyboard.push([saleBtn]);
-
       const catalogCat = await this.categoriesService.findByType(CategoryType.CATALOG);
       keyboard.push([{ text: catalogCat?.name || 'Каталог', callback_data: 'catalog' }]);
 
-      const bottomRow = [];
-      const orderBtn = buildOrderButtonRow(buttons.order);
-      if (orderBtn) bottomRow.push(orderBtn);
+      const saleBtn = buildSalePostButton(salePost);
+      if (saleBtn) keyboard.push([saleBtn]);
+
       const channelBtn = buildChannelButtonInline(buttons.channel);
-      if (channelBtn) bottomRow.push(channelBtn);
-      if (bottomRow.length) keyboard.push(bottomRow);
+      if (channelBtn) keyboard.push([channelBtn]);
+
+      const orderAdminRow: any[] = [];
+      const orderBtn = buildOrderButtonRow(buttons.order);
+      if (orderBtn) orderAdminRow.push(orderBtn);
+      const adminBtn = buildAdminButtonInline(buttons.admin);
+      if (adminBtn) orderAdminRow.push(adminBtn);
+      if (orderAdminRow.length) keyboard.push(orderAdminRow);
 
       const caption = welcomePost?.description || 'Ласкаво просимо!';
       const imagePath = getImagePath(welcomePost?.image);

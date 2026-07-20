@@ -6,7 +6,6 @@ import { ButtonsService } from '../../buttons/buttons.service';
 import {
   buildOrderButtonRow,
   buildAdminButtonInline,
-  buildChannelButtonInline,
   buildMainMenuButtonInline,
   getImagePath,
   sendOrEditWithMedia,
@@ -35,12 +34,9 @@ export class ProductUpdate {
 
       const keyboard: any[][] = [];
       const orderBtn = buildOrderButtonRow(buttons.order);
-      if (orderBtn) keyboard.push([orderBtn]);
-
       const adminBtn = buildAdminButtonInline(buttons.admin);
-      const channelBtn = buildChannelButtonInline(buttons.channel);
-      const row2 = [adminBtn, channelBtn].filter(Boolean);
-      if (row2.length) keyboard.push(row2);
+      const orderAdminRow = [orderBtn, adminBtn].filter(Boolean);
+      if (orderAdminRow.length) keyboard.push(orderAdminRow);
 
       const backCallback = source === 'all'
         ? 'all_products'
