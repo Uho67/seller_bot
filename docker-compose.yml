@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        VITE_BASE_PATH: /steam_bot
     container_name: steam_bot
     restart: unless-stopped
     ports:

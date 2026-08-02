@@ -5,7 +5,7 @@
 - **Backend**: NestJS, port `3006`
 - **Admin panel**: React (Vite) — built inside Docker, served by the backend at `/`
 - **Web server**: Nginx (reverse proxy)
-- **Domain**: `https://uho.kharkiv.ua/flow`
+- **Domain**: `https://uho.kharkiv.ua/steam_bot`
 - **Runtime**: Docker (single container for backend + admin)
 
 ---
@@ -72,7 +72,7 @@ docker compose logs -f
 
 Since the Docker container serves both the admin panel and the API, nginx only needs to proxy everything to the container.
 
-Create `/etc/nginx/sites-available/flow`:
+Create `/etc/nginx/sites-available/steam_bot`:
 
 ```nginx
 server {
@@ -80,8 +80,8 @@ server {
     server_name uho.kharkiv.ua;
 
     # Proxy everything to the Docker container
-    location /flow/ {
-        rewrite ^/flow/(.*)$ /$1 break;
+    location /steam_bot/ {
+        rewrite ^/steam_bot/(.*)$ /$1 break;
         proxy_pass http://localhost:3006;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
@@ -95,7 +95,7 @@ server {
 Enable and test:
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/flow /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/steam_bot /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -116,14 +116,38 @@ sudo systemctl reload nginx
 
 | Resource        | URL                                      |
 |-----------------|------------------------------------------|
-| Admin panel     | `https://uho.kharkiv.ua/flow/`        |
-| REST API        | `https://uho.kharkiv.ua/flow/api/`    |
-| Uploaded images | `https://uho.kharkiv.ua/flow/uploads/`|
+| Admin panel     | `https://uho.kharkiv.ua/steam_bot/`        |
+| REST API        | `https://uho.kharkiv.ua/steam_bot/api/`    |
+| Uploaded images | `https://uho.kharkiv.ua/steam_bot/uploads/`|
 | Container direct| `http://localhost:3006` (internal only)  |
 
 ---
 
-## 8. Redeploy after changes
+## 8. Check Nginx logs
+
+```bash
+# Access log (all requests)
+sudo tail -f /var/log/nginx/access.log
+
+# Error log (4xx/5xx, config issues)
+sudo tail -f /var/log/nginx/error.log
+
+# Last 100 error lines
+sudo tail -n 100 /var/log/nginx/error.log
+
+# Filter only this site's errors (if you use a named log file)
+sudo tail -f /var/log/nginx/steam_bot.error.log
+
+# Check nginx status
+sudo systemctl status nginx
+
+# Test nginx config without reloading
+sudo nginx -t
+```
+
+---
+
+## 9. Redeploy after changes
 
 ```bash
 cd /var/www/siga_first
