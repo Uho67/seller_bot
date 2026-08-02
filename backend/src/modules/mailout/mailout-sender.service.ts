@@ -72,7 +72,7 @@ export class MailoutSenderService {
     }
 
     if (post?.image) {
-      const imagePath = path.join(__dirname, '..', '..', '..', '..', 'uploads', post.image);
+      const imagePath = path.join(process.cwd(), 'uploads', post.image);
       if (fs.existsSync(imagePath)) {
         const res = await this.bot.telegram.sendPhoto(
           chatId,
