@@ -60,6 +60,15 @@ async function updatePassword(db, name, password) {
   console.log(`Password updated for "${name}".`);
 }
 
+function resetFileIds(db) {
+  const tables = ['product_post', 'category_post', 'welcome_post', 'sale_post'];
+  for (const table of tables) {
+    const result = db.prepare(`UPDATE ${table} SET telegram_file_id = NULL`).run();
+    console.log(`${table}: ${result.changes} row(s) cleared`);
+  }
+  console.log('Done. All telegram_file_id values reset to NULL.');
+}
+
 function deleteAdmin(db, name) {
   if (!name) {
     console.error('Usage: admin-cli delete <name>');
@@ -96,6 +105,9 @@ async function main() {
     case 'delete':
       deleteAdmin(db, args[0]);
       break;
+    case 'reset-file-ids':
+      resetFileIds(db);
+      break;
     default:
       console.log(`
 Admin CLI — manage siga_bot admin accounts
@@ -105,6 +117,7 @@ Commands:
   create <name> <password>      Create a new admin
   update-password <name> <pwd>  Change an admin's password
   delete <name>                 Delete an admin (cannot delete last one)
+  reset-file-ids                Clear all cached Telegram file IDs
 
 Environment:
   DB_PATH   Path to SQLite file (default: ./data/database.sqlite)
