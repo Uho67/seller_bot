@@ -36,7 +36,7 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Post('import')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', { limits: { fileSize: 50 * 1024 * 1024 } }))
   importCsv(@UploadedFile() file: Express.Multer.File) {
     return this.service.importFromCsv(file.buffer);
   }
