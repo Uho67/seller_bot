@@ -26,5 +26,5 @@ COPY --from=backend-builder /app/scripts ./scripts
 COPY --from=backend-builder /app/package.json ./package.json    
 COPY --from=admin-builder /admin/dist ./public
 RUN mkdir -p uploads data backups
-EXPOSE 3007
+EXPOSE 3006
 CMD ["node", "dist/main.js"]

@@ -11,12 +11,12 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         [`${basePath}/api`]: {
-          target: 'http://localhost:3007',
+          target: 'http://localhost:3006',
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp(`^${basePath}`), ''),
         },
         [`${basePath}/uploads`]: {
-          target: 'http://localhost:3007',
+          target: 'http://localhost:3006',
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp(`^${basePath}`), ''),
         },

@@ -2,7 +2,7 @@
 
 ## Stack
 
-- **Backend**: NestJS, port `3007`
+- **Backend**: NestJS, port `3006`
 - **Admin panel**: React (Vite) — built inside Docker, served by the backend at `/`
 - **Web server**: Nginx (reverse proxy)
 - **Domain**: `https://uho.kharkiv.ua/flow`
@@ -35,7 +35,7 @@ cd siga_first
 Create `/var/www/siga_first/backend/.env`:
 
 ```env
-PORT=3007
+PORT=3006
 BOT_TOKEN=your_telegram_bot_token_here
 JWT_SECRET=some_long_random_secret
 ADMIN_PANEL_ORIGIN=https://uho.kharkiv.ua
@@ -56,8 +56,8 @@ Verify:
 
 ```bash
 docker compose ps
-curl http://localhost:3007/api
-curl http://localhost:3007          # should return admin panel HTML
+curl http://localhost:3006/api
+curl http://localhost:3006          # should return admin panel HTML
 ```
 
 View logs:
@@ -82,7 +82,7 @@ server {
     # Proxy everything to the Docker container
     location /flow/ {
         rewrite ^/flow/(.*)$ /$1 break;
-        proxy_pass http://localhost:3007;
+        proxy_pass http://localhost:3006;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -119,7 +119,7 @@ sudo systemctl reload nginx
 | Admin panel     | `https://uho.kharkiv.ua/flow/`        |
 | REST API        | `https://uho.kharkiv.ua/flow/api/`    |
 | Uploaded images | `https://uho.kharkiv.ua/flow/uploads/`|
-| Container direct| `http://localhost:3007` (internal only)  |
+| Container direct| `http://localhost:3006` (internal only)  |
 
 ---
 

@@ -6,7 +6,7 @@ services:
     container_name: steam_bot
     restart: unless-stopped
     ports:
-      - "3007:3007"
+      - "3006:3006"
     volumes:
       - ./backend/data:/app/data
       - ./backend/backups:/app/backups

@@ -22,7 +22,7 @@ cp .env.example .env
 npm run start:dev
 ```
 
-Backend runs on `http://localhost:3007`
+Backend runs on `http://localhost:3006`
 
 ### Admin Panel
 
@@ -40,7 +40,7 @@ Admin panel runs on `http://localhost:5173`
 |---|---|
 | `BOT_TOKEN` | Telegram bot token from @BotFather |
 | `JWT_SECRET` | Secret key for JWT signing |
-| `PORT` | Backend port (default: 3007) |
+| `PORT` | Backend port (default: 3006) |
 | `ADMIN_PANEL_ORIGIN` | Admin panel origin for CORS |
 
 ## API Routes

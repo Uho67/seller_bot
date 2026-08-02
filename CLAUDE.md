@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Backend (NestJS — from `backend/`)
 ```bash
-npm run start:dev     # Dev server with file watch (port 3007)
+npm run start:dev     # Dev server with file watch (port 3006)
 npm run build         # Compile TypeScript to dist/
 npm run start         # Run compiled production build
 npm run admin -- list                         # List admin users
@@ -17,7 +17,7 @@ npm run admin -- delete <name>                # Delete admin user
 
 ### Admin Panel (React/Vite — from `admin/`)
 ```bash
-npm run dev           # Dev server (port 5173, proxies /flow/api → localhost:3007)
+npm run dev           # Dev server (port 5173, proxies /flow/api → localhost:3006)
 npm run build         # tsc + vite build (output to dist/)
 ```
 
@@ -25,8 +25,17 @@ npm run build         # tsc + vite build (output to dist/)
 ```bash
 docker compose up -d --build   # Build and start everything
 docker compose logs -f         # Stream logs
-docker exec flow_bot sh        # Shell into container
+docker exec steam_bot sh        # Shell into container
 # Or use the Makefile shortcuts: make deploy, make logs, make shell
+```
+
+### Admin CLI inside container (production)
+```bash
+docker exec steam_bot node scripts/admin-cli.js list
+docker exec steam_bot node scripts/admin-cli.js create <name> <password>
+docker exec steam_bot node scripts/admin-cli.js update-password <name> <pw>
+docker exec steam_bot node scripts/admin-cli.js delete <name>
+docker exec steam_bot node scripts/admin-cli.js reset-file-ids   # Clear cached Telegram file IDs
 ```
 
 ## Architecture
@@ -41,7 +50,7 @@ docker exec flow_bot sh        # Shell into container
 ```
 backend/src/
 ├── app.module.ts           # Root module, TypeORM config, ServeStaticModule
-├── main.ts                 # Global prefix /api, CORS, ValidationPipe, port 3007
+├── main.ts                 # Global prefix /api, CORS, ValidationPipe, port 3006
 ├── modules/
 │   ├── auth/               # JWT login, bcrypt, Passport strategy
 │   ├── products/           # Product CRUD + enable/disable + category assignment
@@ -81,7 +90,7 @@ Four `@Update()` classes handle all Telegram interactions via `nestjs-telegraf`:
 ### Admin panel
 React 18 + Ant Design + React Query. All API calls go through `admin/src/api/client.ts` (axios instance), which adds `Authorization: Bearer` from localStorage and redirects to `/login` on 401.
 
-**Base path system**: `VITE_BASE_PATH` env var controls both the Vite `base` and the React Router `basename`. In dev, Vite proxies `${BASE}/api/*` → `localhost:3007/api/*`. In production, Nginx rewrites `/flow/` → `/` before proxying to the container.
+**Base path system**: `VITE_BASE_PATH` env var controls both the Vite `base` and the React Router `basename`. In dev, Vite proxies `${BASE}/api/*` → `localhost:3006/api/*`. In production, Nginx rewrites `/flow/` → `/` before proxying to the container.
 
 ### Authentication
 Admin-only via JWT. `POST /api/auth/login` returns a 7-day token stored in localStorage. All mutating category/product/etc. routes are guarded with `JwtAuthGuard`.
