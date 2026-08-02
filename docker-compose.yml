@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: flow_bot
+    container_name: steam_bot
     restart: unless-stopped
     ports:
       - "3007:3007"
