@@ -4,7 +4,7 @@ WORKDIR /admin
 COPY admin/package*.json ./
 RUN npm install --legacy-peer-deps
 COPY admin/ .
-ARG VITE_BASE_PATH=/steam_bot
+ARG VITE_BASE_PATH=/aroma
 ENV VITE_BASE_PATH=${VITE_BASE_PATH}
 RUN npm run build
 
@@ -26,5 +26,5 @@ COPY --from=backend-builder /app/scripts ./scripts
 COPY --from=backend-builder /app/package.json ./package.json    
 COPY --from=admin-builder /admin/dist ./public
 RUN mkdir -p uploads data backups
-EXPOSE 3006
+EXPOSE 3004
 CMD ["node", "dist/main.js"]
