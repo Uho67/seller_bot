@@ -11,10 +11,14 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { WelcomePostModule } from './modules/welcome-post/welcome-post.module';
 import { SalePostModule } from './modules/sale-post/sale-post.module';
 import { ButtonsModule } from './modules/buttons/buttons.module';
+import { ExtraButtonModule } from './modules/extra-button/extra-button.module';
+import { AppButtonModule } from './modules/app-button/app-button.module';
+import { WebappModule } from './modules/webapp/webapp.module';
 import { UsersModule } from './modules/users/users.module';
 import { MailoutModule } from './modules/mailout/mailout.module';
 import { BotModule } from './modules/bot/bot.module';
 import { BackupModule } from './modules/backup/backup.module';
+import { AppWelcomePostModule } from './modules/app-welcome-post/app-welcome-post.module';
 
 @Module({
   imports: [
@@ -36,7 +40,13 @@ import { BackupModule } from './modules/backup/backup.module';
         serveRoot: '/uploads',
       },
       {
-        rootPath: join(__dirname, '..', 'public'),
+        rootPath: join(__dirname, '..', 'public-webapp'),
+        serveRoot: '/',
+        exclude: ['/api*', '/uploads*', '/uds2_badmin*'],
+      },
+      {
+        rootPath: join(__dirname, '..', 'public-admin'),
+        serveRoot: '/uds2_badmin',
         exclude: ['/api*', '/uploads*'],
       },
     ),
@@ -47,10 +57,14 @@ import { BackupModule } from './modules/backup/backup.module';
     WelcomePostModule,
     SalePostModule,
     ButtonsModule,
+    ExtraButtonModule,
+    AppButtonModule,
+    WebappModule,
     UsersModule,
     MailoutModule,
     BotModule,
     BackupModule,
+    AppWelcomePostModule,
   ],
 })
 export class AppModule {}

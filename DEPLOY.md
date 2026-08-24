@@ -156,3 +156,85 @@ docker compose up -d --build
 ```
 
 One command rebuilds everything (admin + backend) and restarts the container.
+
+---
+
+## 10. Telegram Mini App (`app.aromagood.at`)
+
+The Mini App is a separate frontend served by the same container at path `/webapp/`. Nginx maps the subdomain root to that path.
+
+### Prerequisites
+
+1. Purchase and configure the `aromagood.at` domain.
+2. Add DNS `A` record: `app.aromagood.at` → server public IP.
+3. Set the public URL in `backend/.env`:
+   ```env
+   WEBAPP_URL=https://app.aromagood.at
+   ```
+   When set, the backend registers this URL as the bot's menu button on startup.
+
+### Nginx server block
+
+Create `/etc/nginx/sites-available/aromagood_webapp`:
+
+```nginx
+server {
+    listen 80;
+    server_name app.aromagood.at;
+
+    # Webapp static files (served by NestJS at /webapp/*)
+    location / {
+        proxy_pass http://127.0.0.1:3012/webapp/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # API
+    location /api/ {
+        proxy_pass http://127.0.0.1:3012/api/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Uploaded images
+    location /uploads/ {
+        proxy_pass http://127.0.0.1:3012/uploads/;
+    }
+}
+```
+
+Enable + test + reload:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/aromagood_webapp /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+### HTTPS
+
+```bash
+sudo certbot --nginx -d app.aromagood.at
+sudo systemctl reload nginx
+```
+
+### Verification
+
+```bash
+curl -I https://app.aromagood.at/                    # 200 OK, webapp HTML
+curl -I https://app.aromagood.at/api/categories      # 200 OK, JSON list
+curl -I https://app.aromagood.at/uploads/<image>     # 200 OK, image bytes
+```
+
+Then open the bot in Telegram — the menu button "Відкрити каталог" should appear and open the Mini App.
+
+### Roll-back
+
+Delete the Nginx server block and remove `WEBAPP_URL` from `.env`; the bot returns to its previous behaviour with no menu button.
+

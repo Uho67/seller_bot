@@ -1,3 +1,8 @@
+-include .env
+export
+
+CONTAINER_NAME ?= aromagood
+
 .PHONY: first-deploy deploy shell logs
 
 first-deploy:
@@ -5,11 +10,10 @@ first-deploy:
 	docker compose up -d --build
 
 deploy:
-	git pull
 	docker compose up -d --build
 
 shell:
-	docker exec -it aroma sh
+	docker exec -it $(CONTAINER_NAME) sh
 
 logs:
 	docker compose logs -f

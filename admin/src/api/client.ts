@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const BASE = import.meta.env.VITE_BASE_PATH || '/pachka';
-const client = axios.create({ baseURL: `${BASE}/api` });
+const BASE = import.meta.env.VITE_BASE_PATH || '/aromagood';
+const client = axios.create({ baseURL: '/api' });
 
 client.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');

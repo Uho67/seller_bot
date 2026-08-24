@@ -5,6 +5,7 @@ import { WelcomePostService } from '../../welcome-post/welcome-post.service';
 import { SalePostService } from '../../sale-post/sale-post.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { ButtonsService } from '../../buttons/buttons.service';
+import { AppButtonService } from '../../app-button/app-button.service';
 import { CategoryType } from '../../../database/entities/category-post.entity';
 import {
   buildOrderButtonRow,
@@ -24,6 +25,7 @@ export class MainMenuUpdate {
     private salePostService: SalePostService,
     private categoriesService: CategoriesService,
     private buttonsService: ButtonsService,
+    private appButtonService: AppButtonService,
   ) {}
 
   @Start()
@@ -31,6 +33,23 @@ export class MainMenuUpdate {
     try {
       await this.usersService.upsertUser(ctx.from);
     } catch {}
+
+    try {
+      const appButton = await this.appButtonService.get();
+      if (appButton?.is_enabled && appButton?.url) {
+        await ctx.reply('📱', {
+          reply_markup: {
+            keyboard: [[{ text: appButton.text || '📱', web_app: { url: appButton.url } }]],
+            resize_keyboard: true,
+            persistent: true,
+          } as any,
+        });
+      } else {
+        const msg = await ctx.reply('\u200B', { reply_markup: { remove_keyboard: true } as any });
+        try { await ctx.deleteMessage(msg.message_id); } catch {}
+      }
+    } catch {}
+
     await this.renderMainMenu(ctx);
   }
 

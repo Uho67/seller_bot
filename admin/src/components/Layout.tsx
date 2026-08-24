@@ -14,7 +14,8 @@ const menuItems = [
   { key: '/', icon: <AppstoreOutlined />, label: 'Дашборд' },
   { key: '/products', icon: <ShoppingOutlined />, label: 'Товары' },
   { key: '/categories', icon: <TagsOutlined />, label: 'Категории' },
-  { key: '/welcome-post', icon: <StarOutlined />, label: 'Welcome Post' },
+  { key: '/welcome-post', icon: <StarOutlined />, label: 'Welcome Post (бот)' },
+  { key: '/app-welcome-post', icon: <StarOutlined />, label: 'Welcome Post (App)' },
   { key: '/sale-post', icon: <GiftOutlined />, label: 'Акция' },
   { key: '/buttons', icon: <SettingOutlined />, label: 'Кнопки' },
   { key: '/users', icon: <TeamOutlined />, label: 'Пользователи' },
@@ -59,7 +60,7 @@ export function AdminLayout() {
             onClick={() => setDrawerOpen(true)}
             style={{ padding: 4 }}
           />
-          <span style={{ color: '#fff', fontWeight: 'bold', fontSize: 17 }}>Siga Bot</span>
+          <span style={{ color: '#fff', fontWeight: 'bold', fontSize: 17 }}>aromagood</span>
         </Header>
         <Drawer
           title={<span style={{ color: '#fff' }}>Меню</span>}
@@ -99,7 +100,7 @@ export function AdminLayout() {
     <AntLayout style={{ minHeight: '100vh' }}>
       <Sider theme="dark">
         <div style={{ color: '#fff', textAlign: 'center', padding: '16px', fontWeight: 'bold', fontSize: 16 }}>
-          Siga Bot
+          aromagood
         </div>
         <Menu
           theme="dark"

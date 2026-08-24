@@ -9,12 +9,14 @@ import { OrderButton } from './entities/order-button.entity';
 import { AdminButton } from './entities/admin-button.entity';
 import { MainMenuButton } from './entities/main-menu-button.entity';
 import { ChannelButton } from './entities/channel-button.entity';
+import { ExtraButton } from './entities/extra-button.entity';
+import { AppButton } from './entities/app-button.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       CategoryPost, WelcomePost, SalePost, Admin,
-      OrderButton, AdminButton, MainMenuButton, ChannelButton,
+      OrderButton, AdminButton, MainMenuButton, ChannelButton, ExtraButton, AppButton,
     ]),
   ],
   providers: [SeederService],

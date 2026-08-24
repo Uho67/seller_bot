@@ -20,10 +20,12 @@ async function bootstrap() {
     new ValidationPipe({ whitelist: true, transform: true }),
   );
 
-  app.enableCors({
-    origin: process.env.ADMIN_PANEL_ORIGIN || 'http://localhost:5173',
-    credentials: true,
-  });
+  const origins = [
+    process.env.ADMIN_PANEL_ORIGIN || 'http://localhost:5173',
+    'http://localhost:5174',
+  ];
+  if (process.env.WEBAPP_URL) origins.push(process.env.WEBAPP_URL);
+  app.enableCors({ origin: origins, credentials: true });
 
   const port = process.env.PORT || 3000;
   await app.listen(port, '0.0.0.0');

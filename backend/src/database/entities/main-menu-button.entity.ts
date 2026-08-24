@@ -7,4 +7,13 @@ export class MainMenuButton {
 
   @Column({ default: 'Головне меню' })
   name: string;
+
+  @Column({ default: '' })
+  bot_text: string;
+
+  @Column({ default: '' })
+  bot_url: string;
+
+  @Column({ default: false })
+  bot_is_enabled: boolean;
 }

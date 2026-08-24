@@ -21,7 +21,7 @@ export function Login() {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: '#f0f2f5', padding: 16 }}>
       <Card style={{ width: '100%', maxWidth: 400 }}>
-        <Typography.Title level={3} style={{ textAlign: 'center' }}>Siga Bot Admin</Typography.Title>
+        <Typography.Title level={3} style={{ textAlign: 'center' }}>aromagood</Typography.Title>
         <Form form={form} onFinish={onFinish} layout="vertical">
           <Form.Item name="name" label="Логин" rules={[{ required: true }]}>
             <Input size="large" />

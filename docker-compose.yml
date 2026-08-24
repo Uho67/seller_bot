@@ -4,11 +4,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        VITE_BASE_PATH: /aroma
-    container_name: aroma
+        VITE_BASE_PATH: /uds2_badmin
+    container_name: ${CONTAINER_NAME:-aromagood}
     restart: unless-stopped
     ports:
-      - "3004:3004"
+      - "${PORT:-3012}:${PORT:-3012}"
     volumes:
       - ./backend/data:/app/data
       - ./backend/backups:/app/backups

@@ -22,6 +22,9 @@ export class User {
   @Column({ default: true })
   is_active: boolean;
 
+  @Column({ nullable: true })
+  init_data_hash: string;
+
   @CreateDateColumn()
   created_at: Date;
 

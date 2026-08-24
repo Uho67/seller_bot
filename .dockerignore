@@ -5,3 +5,5 @@ backend/database.sqlite
 backend/uploads
 admin/node_modules
 admin/dist
+webapp/node_modules
+webapp/dist

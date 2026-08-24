@@ -9,6 +9,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Products } from './pages/Products';
 import { Categories } from './pages/Categories';
 import { WelcomePostPage } from './pages/WelcomePost';
+import { AppWelcomePostPage } from './pages/AppWelcomePost';
 import { SalePostPage } from './pages/SalePost';
 import { ButtonsPage } from './pages/Buttons';
 import { UsersPage } from './pages/Users';
@@ -18,7 +19,7 @@ export default function App() {
   return (
     <ConfigProvider locale={ukUA}>
       <AuthProvider>
-        <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || '/pachka'}>
+        <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || '/aromagood'}>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route
@@ -33,6 +34,7 @@ export default function App() {
               <Route path="products" element={<Products />} />
               <Route path="categories" element={<Categories />} />
               <Route path="welcome-post" element={<WelcomePostPage />} />
+              <Route path="app-welcome-post" element={<AppWelcomePostPage />} />
               <Route path="sale-post" element={<SalePostPage />} />
               <Route path="buttons" element={<ButtonsPage />} />
               <Route path="users" element={<UsersPage />} />

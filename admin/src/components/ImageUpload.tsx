@@ -22,8 +22,7 @@ export function ImageUpload({ currentImage, onChange }: Props) {
     return false;
   };
 
-  const base = import.meta.env.VITE_BASE_PATH || '/pachka';
-  const imageUrl = preview || (currentImage ? `${base}/uploads/${currentImage}` : null);
+  const imageUrl = preview || (currentImage ? `/uploads/${currentImage}` : null);
 
   return (
     <div>

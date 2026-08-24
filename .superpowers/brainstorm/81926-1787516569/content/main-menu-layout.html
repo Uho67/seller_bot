@@ -1,0 +1,48 @@
+<h2>Main menu layout — pick a direction</h2>
+<p class="subtitle">Russian text, mobile-first. All variants show: welcome text, Catalog, All Photos, Sale, Channel, Bot, Extra (optional), Order/Admin.</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Stacked buttons (bot-style)</h3>
+      <div class="mockup" style="max-width:340px;margin-top:12px">
+        <div class="mockup-header">Main Menu</div>
+        <div class="mockup-body" style="padding:16px;background:#f7f7f8">
+          <div style="font-size:13px;color:#555;text-align:center;margin-bottom:14px;line-height:1.4">Добро пожаловать в AromaGood!<br>Выберите раздел ниже</div>
+          <button class="mock-button" style="width:100%;margin-bottom:8px;background:#2481cc;color:#fff">📦 Каталог</button>
+          <button class="mock-button" style="width:100%;margin-bottom:8px">🖼 Все фото</button>
+          <button class="mock-button" style="width:100%;margin-bottom:8px">🔥 Акции</button>
+          <button class="mock-button" style="width:100%;margin-bottom:8px">📢 Канал</button>
+          <button class="mock-button" style="width:100%;margin-bottom:8px">🤖 Бот</button>
+          <button class="mock-button" style="width:100%;margin-bottom:8px">✨ Extra (custom)</button>
+          <button class="mock-button" style="width:100%;background:#31b545;color:#fff">💬 Заказать</button>
+        </div>
+      </div>
+      <p style="margin-top:10px;font-size:13px;color:#666">Feels like a native Telegram bot keyboard, one tap = one action. Familiar for existing users.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Tile grid (storefront-style)</h3>
+      <div class="mockup" style="max-width:340px;margin-top:12px">
+        <div class="mockup-header">Main Menu</div>
+        <div class="mockup-body" style="padding:16px;background:#f7f7f8">
+          <div style="font-size:13px;color:#555;text-align:center;margin-bottom:14px;line-height:1.4">AromaGood<br>Каталог ароматов</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:18px 8px;text-align:center;font-size:12px">📦<br>Каталог</div>
+            <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:18px 8px;text-align:center;font-size:12px">🖼<br>Все фото</div>
+            <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:18px 8px;text-align:center;font-size:12px">🔥<br>Акции</div>
+            <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:18px 8px;text-align:center;font-size:12px">📢<br>Канал</div>
+            <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:18px 8px;text-align:center;font-size:12px">🤖<br>Бот</div>
+            <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:18px 8px;text-align:center;font-size:12px">✨<br>Extra</div>
+          </div>
+          <button class="mock-button" style="width:100%;background:#31b545;color:#fff">💬 Заказать</button>
+        </div>
+      </div>
+      <p style="margin-top:10px;font-size:13px;color:#666">Denser, more app-like. Order button stays as a persistent CTA at the bottom.</p>
+    </div>
+  </div>
+</div>

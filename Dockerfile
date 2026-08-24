@@ -4,8 +4,16 @@ WORKDIR /admin
 COPY admin/package*.json ./
 RUN npm install --legacy-peer-deps
 COPY admin/ .
-ARG VITE_BASE_PATH=/aroma
+ARG VITE_BASE_PATH=/uds2_badmin
 ENV VITE_BASE_PATH=${VITE_BASE_PATH}
+RUN npm run build
+
+# Stage 1b: build webapp (Telegram Mini App)
+FROM node:20-alpine AS webapp-builder
+WORKDIR /webapp
+COPY webapp/package*.json ./
+RUN npm install --legacy-peer-deps
+COPY webapp/ .
 RUN npm run build
 
 # Stage 2: build backend (needs compiler for better-sqlite3)
@@ -22,9 +30,10 @@ FROM node:20-alpine
 WORKDIR /app
 COPY --from=backend-builder /app/node_modules ./node_modules
 COPY --from=backend-builder /app/dist ./dist
-COPY --from=backend-builder /app/scripts ./scripts                                                                 
-COPY --from=backend-builder /app/package.json ./package.json    
-COPY --from=admin-builder /admin/dist ./public
-RUN mkdir -p uploads data backups
-EXPOSE 3004
+COPY --from=backend-builder /app/scripts ./scripts
+COPY --from=backend-builder /app/package.json ./package.json
+COPY --from=admin-builder /admin/dist ./public-admin
+COPY --from=webapp-builder /webapp/dist ./public-webapp
+RUN mkdir -p uploads data backups public-admin public-webapp
+EXPOSE 3012
 CMD ["node", "dist/main.js"]

@@ -10,6 +10,8 @@ import { OrderButton } from '../entities/order-button.entity';
 import { AdminButton } from '../entities/admin-button.entity';
 import { MainMenuButton } from '../entities/main-menu-button.entity';
 import { ChannelButton } from '../entities/channel-button.entity';
+import { ExtraButton } from '../entities/extra-button.entity';
+import { AppButton } from '../entities/app-button.entity';
 
 @Injectable()
 export class SeederService implements OnModuleInit {
@@ -22,6 +24,8 @@ export class SeederService implements OnModuleInit {
     @InjectRepository(AdminButton) private adminBtnRepo: Repository<AdminButton>,
     @InjectRepository(MainMenuButton) private mainMenuBtnRepo: Repository<MainMenuButton>,
     @InjectRepository(ChannelButton) private channelBtnRepo: Repository<ChannelButton>,
+    @InjectRepository(ExtraButton) private extraBtnRepo: Repository<ExtraButton>,
+    @InjectRepository(AppButton) private appBtnRepo: Repository<AppButton>,
   ) {}
 
   async onModuleInit() {
@@ -76,6 +80,16 @@ export class SeederService implements OnModuleInit {
     const channel = await this.channelBtnRepo.findOne({ where: { id: 1 } });
     if (!channel) {
       await this.channelBtnRepo.save(this.channelBtnRepo.create({ id: 1 }));
+    }
+
+    const extra = await this.extraBtnRepo.findOne({ where: { id: 1 } });
+    if (!extra) {
+      await this.extraBtnRepo.save(this.extraBtnRepo.create({ id: 1 }));
+    }
+
+    const appBtn = await this.appBtnRepo.findOne({ where: { id: 1 } });
+    if (!appBtn) {
+      await this.appBtnRepo.save(this.appBtnRepo.create({ id: 1 }));
     }
   }
 
