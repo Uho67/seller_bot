@@ -134,6 +134,15 @@ button:active { opacity: 0.7; }
 .list-row img {
   width: 44px; height: 44px; border-radius: 8px; object-fit: cover;
 }
+.list-row-centered {
+  justify-content: center;
+  text-align: center;
+}
+.list-row-sale {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
 
 /* Product grid */
 .product-grid {
