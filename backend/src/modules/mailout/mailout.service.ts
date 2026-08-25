@@ -115,7 +115,7 @@ export class MailoutService {
 
       if (!batch.length) return;
 
-      const { buttons, catalogCat } = await this.senderService.getKeyboardContext();
+      const { buttons, catalogCat, botSettings, shippingPost } = await this.senderService.getKeyboardContext();
 
       const postCache = new Map<string, any>();
       const fileIdCache = new Map<string, string>();
@@ -131,7 +131,7 @@ export class MailoutService {
 
         const post = postCache.get(key);
         const cachedFileId = fileIdCache.get(key) ?? post?.telegram_file_id ?? null;
-        const keyboard = this.senderService.buildKeyboard(record.post_type, buttons, catalogCat);
+        const keyboard = this.senderService.buildKeyboard(record.post_type, buttons, catalogCat, botSettings, shippingPost);
 
         try {
           const { msgId, fileId } = await this.senderService.sendPost(record.chat_id, post, cachedFileId, keyboard);

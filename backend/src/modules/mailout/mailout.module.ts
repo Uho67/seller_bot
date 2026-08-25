@@ -8,6 +8,7 @@ import { WelcomePost } from '../../database/entities/welcome-post.entity';
 import { UsersModule } from '../users/users.module';
 import { ButtonsModule } from '../buttons/buttons.module';
 import { CategoriesModule } from '../categories/categories.module';
+import { ShippingPostModule } from '../shipping-post/shipping-post.module';
 import { MailoutService } from './mailout.service';
 import { MailoutPostService } from './mailout-post.service';
 import { MailoutSenderService } from './mailout-sender.service';
@@ -19,6 +20,7 @@ import { MailoutController } from './mailout.controller';
     UsersModule,
     ButtonsModule,
     CategoriesModule,
+    ShippingPostModule,
     TelegrafModule,
   ],
   controllers: [MailoutController],

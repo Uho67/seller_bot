@@ -6,12 +6,15 @@ import * as path from 'path';
 import { PostType } from '../../database/entities/mailout.entity';
 import { ButtonsService } from '../buttons/buttons.service';
 import { CategoriesService } from '../categories/categories.service';
+import { ShippingPostService } from '../shipping-post/shipping-post.service';
 import { CategoryType } from '../../database/entities/category-post.entity';
 import {
   buildOrderButtonRow,
   buildAdminButtonInline,
   buildChannelButtonInline,
   buildMainMenuButtonInline,
+  buildMiniAppButton,
+  buildShippingPostButton,
 } from '../bot/bot.helpers';
 
 @Injectable()
@@ -19,19 +22,32 @@ export class MailoutSenderService {
   constructor(
     private buttonsService: ButtonsService,
     private categoriesService: CategoriesService,
+    private shippingPostService: ShippingPostService,
     @InjectBot() private bot: Telegraf,
   ) {}
 
   async getKeyboardContext() {
-    const [buttons, catalogCat] = await Promise.all([
+    const [buttons, catalogCat, botSettings, shippingPost] = await Promise.all([
       this.buttonsService.getAll(),
       this.categoriesService.findByType(CategoryType.CATALOG),
+      this.buttonsService.getBotSettings(),
+      this.shippingPostService.get(),
     ]);
-    return { buttons, catalogCat };
+    return { buttons, catalogCat, botSettings, shippingPost };
   }
 
-  buildKeyboard(postType: PostType, buttons: any, catalogCat: any): any[][] {
+  buildKeyboard(postType: PostType, buttons: any, catalogCat: any, botSettings?: any, shippingPost?: any): any[][] {
     const keyboard: any[][] = [];
+
+    if (botSettings?.mode === 'mini_app') {
+      const miniAppBtn = buildMiniAppButton(botSettings.mini_app_label, botSettings.mini_app_url);
+      if (miniAppBtn) keyboard.push([miniAppBtn]);
+      const adminBtn = buildAdminButtonInline(buttons.admin);
+      if (adminBtn) keyboard.push([adminBtn]);
+      const shippingBtn = buildShippingPostButton(shippingPost);
+      if (shippingBtn) keyboard.push([shippingBtn]);
+      return keyboard;
+    }
 
     if (postType === PostType.SALE) {
       const orderBtn = buildOrderButtonRow(buttons.order);
