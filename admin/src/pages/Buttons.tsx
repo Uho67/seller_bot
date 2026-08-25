@@ -2,8 +2,6 @@ import { useEffect } from 'react';
 import { Form, Input, Button, Card, Row, Col, message, Typography, Switch, Radio } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { buttonsApi } from '../api/buttons';
-import { extraButtonApi } from '../api/extra-button';
-import { appButtonApi } from '../api/app-button';
 import { botSettingsApi } from '../api/bot-settings';
 
 export function ButtonsPage() {
@@ -12,16 +10,6 @@ export function ButtonsPage() {
   const { data: buttons } = useQuery({
     queryKey: ['buttons'],
     queryFn: () => buttonsApi.getAll().then((r) => r.data),
-  });
-
-  const { data: extra } = useQuery({
-    queryKey: ['extra-button'],
-    queryFn: () => extraButtonApi.get().then((r) => r.data),
-  });
-
-  const { data: appButton } = useQuery({
-    queryKey: ['app-button'],
-    queryFn: () => appButtonApi.get().then((r) => r.data),
   });
 
   const { data: botSettings } = useQuery({
@@ -33,8 +21,6 @@ export function ButtonsPage() {
   const [adminForm] = Form.useForm();
   const [mainMenuForm] = Form.useForm();
   const [channelForm] = Form.useForm();
-  const [extraForm] = Form.useForm();
-  const [appButtonForm] = Form.useForm();
   const [botSettingsForm] = Form.useForm();
 
   useEffect(() => {
@@ -44,14 +30,6 @@ export function ButtonsPage() {
     mainMenuForm.setFieldsValue(buttons.mainMenu);
     channelForm.setFieldsValue(buttons.channel);
   }, [buttons]);
-
-  useEffect(() => {
-    if (extra) extraForm.setFieldsValue(extra);
-  }, [extra]);
-
-  useEffect(() => {
-    if (appButton) appButtonForm.setFieldsValue(appButton);
-  }, [appButton]);
 
   useEffect(() => {
     if (botSettings) botSettingsForm.setFieldsValue(botSettings);
@@ -68,8 +46,6 @@ export function ButtonsPage() {
   const adminMut = makeMutation(buttonsApi.updateAdmin, ['buttons']);
   const mainMenuMut = makeMutation(buttonsApi.updateMainMenu, ['buttons']);
   const channelMut = makeMutation(buttonsApi.updateChannel, ['buttons']);
-  const extraMut = makeMutation(extraButtonApi.update, ['extra-button']);
-  const appButtonMut = makeMutation(appButtonApi.update, ['app-button']);
   const botSettingsMut = makeMutation(botSettingsApi.update, ['bot-settings']);
 
   return (
@@ -133,26 +109,6 @@ export function ButtonsPage() {
               <Form.Item name="bot_url" label="URL"><Input placeholder="https://t.me/your_bot" /></Form.Item>
               <Form.Item name="bot_is_enabled" label="Включена" valuePropName="checked"><Switch /></Form.Item>
               <Button type="primary" htmlType="submit" loading={mainMenuMut.isPending} block>Сохранить</Button>
-            </Form>
-          </Card>
-        </Col>
-        <Col xs={24} md={12}>
-          <Card title="Extra кнопка (webapp)">
-            <Form form={extraForm} layout="vertical" onFinish={(v) => extraMut.mutate(v)}>
-              <Form.Item name="text" label="Текст"><Input /></Form.Item>
-              <Form.Item name="url" label="URL"><Input placeholder="https://…" /></Form.Item>
-              <Form.Item name="is_enabled" label="Включена" valuePropName="checked"><Switch /></Form.Item>
-              <Button type="primary" htmlType="submit" loading={extraMut.isPending} block>Сохранить</Button>
-            </Form>
-          </Card>
-        </Col>
-        <Col xs={24} md={12}>
-          <Card title="Кнопка приложения (Reply)">
-            <Form form={appButtonForm} layout="vertical" onFinish={(v) => appButtonMut.mutate(v)}>
-              <Form.Item name="text" label="Текст"><Input /></Form.Item>
-              <Form.Item name="url" label="URL"><Input placeholder="https://…" /></Form.Item>
-              <Form.Item name="is_enabled" label="Включена" valuePropName="checked"><Switch /></Form.Item>
-              <Button type="primary" htmlType="submit" loading={appButtonMut.isPending} block>Сохранить</Button>
             </Form>
           </Card>
         </Col>

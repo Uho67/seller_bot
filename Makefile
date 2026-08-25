@@ -1,7 +1,7 @@
 -include .env
 export
 
-CONTAINER_NAME ?= aromagood
+CONTAINER_NAME ?= aromavawe
 
 .PHONY: first-deploy deploy shell logs
 

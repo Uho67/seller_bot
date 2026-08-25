@@ -68,13 +68,6 @@ export interface ButtonsResponse {
   channel: ChannelButton;
 }
 
-export interface ExtraButton {
-  id: number;
-  text: string;
-  url: string;
-  is_enabled: boolean;
-}
-
 export const api = {
   getCategories: () => client.get<Category[]>('/categories').then((r) => r.data),
   getProducts: () => client.get<Product[]>('/products').then((r) => r.data),
@@ -83,7 +76,6 @@ export const api = {
   getAppWelcomePost: () => client.get<AppWelcomePost>('/app-welcome-post').then((r) => r.data),
   getSalePost: () => client.get<SalePost>('/sale-post').then((r) => r.data),
   getButtons: () => client.get<ButtonsResponse>('/buttons').then((r) => r.data),
-  getExtraButton: () => client.get<ExtraButton>('/extra-button').then((r) => r.data),
 };
 
 export function postSession(initData: string) {

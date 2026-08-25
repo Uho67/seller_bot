@@ -1,22 +1,22 @@
-# Deployment Guide — aromagood.net
+# Deployment Guide — aromavawe.org
 
 ## URL Map
 
 | URL | What it serves |
 |-----|----------------|
-| `https://aromagood.net/` | Telegram Mini App (webapp) |
-| `https://aromagood.net/uds2_badmin/` | Admin panel |
-| `https://aromagood.net/api/` | Backend REST API |
-| `https://aromagood.net/uploads/` | Uploaded product images |
+| `https://aromavawe.org/` | Telegram Mini App (webapp) |
+| `https://aromavawe.org/uds2_badmin/` | Admin panel |
+| `https://aromavawe.org/api/` | Backend REST API |
+| `https://aromavawe.org/uploads/` | Uploaded product images |
 
-Container runs on port **3012** (no conflict with other projects on port 3000).
+Container runs on port **3010** (no conflict with other projects on port 3000).
 
 ---
 
 ## Architecture
 
 ```
-Internet → VPS Nginx :443 (SSL) → Docker container :3012
+Internet → VPS Nginx :443 (SSL) → Docker container :3010
                                         ├── /             → webapp static files
                                         ├── /uds2_badmin/ → admin panel static files
                                         ├── /api/         → NestJS API
@@ -39,8 +39,8 @@ sudo systemctl enable --now docker nginx
 ### 2. Clone repository
 
 ```bash
-git clone <your-repo-url> /var/www/aromagood
-cd /var/www/aromagood
+git clone <your-repo-url> /var/www/aromavawe
+cd /var/www/aromavawe
 ```
 
 ### 3. Configure backend environment
@@ -54,21 +54,21 @@ Fill in:
 ```env
 BOT_TOKEN=<your_telegram_bot_token>
 JWT_SECRET=<long_random_string>
-PORT=3012
-ADMIN_PANEL_ORIGIN=https://aromagood.net
-WEBAPP_URL=https://aromagood.net
+PORT=3010
+ADMIN_PANEL_ORIGIN=https://aromavawe.org
+WEBAPP_URL=https://aromavawe.org
 ```
 
 ### 4. Get SSL certificate (before starting Nginx with the full config)
 
 ```bash
-sudo certbot certonly --standalone -d aromagood.net
+sudo certbot certonly --standalone -d aromavawe.org
 ```
 
 ### 5. Configure Nginx
 
 ```bash
-sudo nano /etc/nginx/sites-available/aromagood.net
+sudo nano /etc/nginx/sites-available/aromavawe.org
 ```
 
 Paste:
@@ -76,23 +76,23 @@ Paste:
 ```nginx
 server {
     listen 80;
-    server_name aromagood.net;
+    server_name aromavawe.org;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name aromagood.net;
+    server_name aromavawe.org;
 
-    ssl_certificate /etc/letsencrypt/live/aromagood.net/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/aromagood.net/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/aromavawe.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/aromavawe.org/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     client_max_body_size 50M;
 
     location / {
-        proxy_pass http://localhost:3012;
+        proxy_pass http://localhost:3010;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -107,21 +107,21 @@ server {
 Enable and reload:
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/aromagood.net /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/aromavawe.org /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
 ### 6. Build and start container
 
 ```bash
-cd /var/www/aromagood
+cd /var/www/aromavawe
 make deploy
 ```
 
 ### 7. Create admin user
 
 ```bash
-docker exec aromagood node scripts/admin-cli.js create <username> <password>
+docker exec aromavawe node scripts/admin-cli.js create <username> <password>
 ```
 
 ---
@@ -129,7 +129,7 @@ docker exec aromagood node scripts/admin-cli.js create <username> <password>
 ## Redeploy (after code changes)
 
 ```bash
-cd /var/www/aromagood
+cd /var/www/aromavawe
 make deploy
 ```
 
@@ -140,14 +140,14 @@ This pulls the latest code, rebuilds the image, and restarts the container with 
 ## Useful commands
 
 ```bash
-make logs                                                    # stream container logs
-make shell                                                   # shell into container
+make logs                                                       # stream container logs
+make shell                                                      # shell into container
 
-docker exec aromagood node scripts/admin-cli.js list         # list admin users
-docker exec aromagood node scripts/admin-cli.js create <n> <pw>
-docker exec aromagood node scripts/admin-cli.js update-password <n> <pw>
-docker exec aromagood node scripts/admin-cli.js delete <n>
-docker exec aromagood node scripts/admin-cli.js reset-file-ids  # clear Telegram file ID cache
+docker exec aromavawe node scripts/admin-cli.js list
+docker exec aromavawe node scripts/admin-cli.js create <n> <pw>
+docker exec aromavawe node scripts/admin-cli.js update-password <n> <pw>
+docker exec aromavawe node scripts/admin-cli.js delete <n>
+docker exec aromavawe node scripts/admin-cli.js reset-file-ids  # clear Telegram file ID cache
 ```
 
 ### Nginx logs
@@ -170,8 +170,8 @@ sudo systemctl reload nginx
 ## Telegram Bot Setup
 
 1. Open [@BotFather](https://t.me/BotFather)
-2. Set the Mini App URL: `/newapp` or `/editapp` → URL = `https://aromagood.net`
-3. Set menu button: `/setmenubutton` → URL = `https://aromagood.net`
+2. Set the Mini App URL: `/newapp` or `/editapp` → URL = `https://aromavawe.org`
+3. Set menu button: `/setmenubutton` → URL = `https://aromavawe.org`
 
 The backend auto-registers the menu button on startup if `WEBAPP_URL` is set in `.env`.
 
@@ -183,4 +183,4 @@ Point the following A record to your VPS IP before running certbot:
 
 | Record | Type | Value |
 |--------|------|-------|
-| `aromagood.net` | A | `<VPS IP>` |
+| `aromavawe.org` | A | `<VPS IP>` |

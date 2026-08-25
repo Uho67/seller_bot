@@ -12,6 +12,7 @@ import {
   buildAdminButtonInline,
   buildChannelButtonInline,
   buildMainMenuButtonInline,
+  buildMiniAppButton,
 } from '../bot/bot.helpers';
 
 @Injectable()
@@ -23,15 +24,24 @@ export class MailoutSenderService {
   ) {}
 
   async getKeyboardContext() {
-    const [buttons, catalogCat] = await Promise.all([
+    const [buttons, catalogCat, botSettings] = await Promise.all([
       this.buttonsService.getAll(),
       this.categoriesService.findByType(CategoryType.CATALOG),
+      this.buttonsService.getBotSettings(),
     ]);
-    return { buttons, catalogCat };
+    return { buttons, catalogCat, botSettings };
   }
 
-  buildKeyboard(postType: PostType, buttons: any, catalogCat: any): any[][] {
+  buildKeyboard(postType: PostType, buttons: any, catalogCat: any, botSettings?: any): any[][] {
     const keyboard: any[][] = [];
+
+    if (botSettings?.mode === 'mini_app') {
+      const miniAppBtn = buildMiniAppButton(botSettings.mini_app_label, botSettings.mini_app_url);
+      if (miniAppBtn) keyboard.push([miniAppBtn]);
+      const adminBtn = buildAdminButtonInline(buttons.admin);
+      if (adminBtn) keyboard.push([adminBtn]);
+      return keyboard;
+    }
 
     if (postType === PostType.SALE) {
       const orderBtn = buildOrderButtonRow(buttons.order);

@@ -25,17 +25,17 @@ npm run build         # tsc + vite build (output to dist/)
 ```bash
 docker compose up -d --build   # Build and start everything
 docker compose logs -f         # Stream logs
-docker exec steam_bot sh        # Shell into container
+docker exec aromavawe sh        # Shell into container
 # Or use the Makefile shortcuts: make deploy, make logs, make shell
 ```
 
 ### Admin CLI inside container (production)
 ```bash
-docker exec steam_bot node scripts/admin-cli.js list
-docker exec steam_bot node scripts/admin-cli.js create <name> <password>
-docker exec steam_bot node scripts/admin-cli.js update-password <name> <pw>
-docker exec steam_bot node scripts/admin-cli.js delete <name>
-docker exec steam_bot node scripts/admin-cli.js reset-file-ids   # Clear cached Telegram file IDs
+docker exec aromavawe node scripts/admin-cli.js list
+docker exec aromavawe node scripts/admin-cli.js create <name> <password>
+docker exec aromavawe node scripts/admin-cli.js update-password <name> <pw>
+docker exec aromavawe node scripts/admin-cli.js delete <name>
+docker exec aromavawe node scripts/admin-cli.js reset-file-ids   # Clear cached Telegram file IDs
 ```
 
 ## Architecture

@@ -58,22 +58,22 @@ All API routes are prefixed with `/api`:
 
 ## Admin management (production / Docker)
 
-Container name: `aromagood`. Run inside the container via `docker exec`:
+Container name: `aromavawe`. Run inside the container via `docker exec`:
 
 ```bash
-docker exec aromagood node scripts/admin-cli.js list
-docker exec aromagood node scripts/admin-cli.js create <name> <password>
-docker exec aromagood node scripts/admin-cli.js update-password <name> <new-password>
-docker exec aromagood node scripts/admin-cli.js delete <name>
-docker exec aromagood node scripts/admin-cli.js reset-file-ids
+docker exec aromavawe node scripts/admin-cli.js list
+docker exec aromavawe node scripts/admin-cli.js create <name> <password>
+docker exec aromavawe node scripts/admin-cli.js update-password <name> <new-password>
+docker exec aromavawe node scripts/admin-cli.js delete <name>
+docker exec aromavawe node scripts/admin-cli.js reset-file-ids
 ```
 
 Example — replace the default `admin` account:
 
 ```bash
-docker exec aromagood node scripts/admin-cli.js create owner 'strong-password'
-docker exec aromagood node scripts/admin-cli.js delete admin
-docker exec aromagood node scripts/admin-cli.js list
+docker exec aromavawe node scripts/admin-cli.js create owner 'strong-password'
+docker exec aromavawe node scripts/admin-cli.js delete admin
+docker exec aromavawe node scripts/admin-cli.js list
 ```
 
 ## Bot Navigation
