@@ -80,6 +80,8 @@ export class MainMenuUpdate {
         if (miniAppBtn) keyboard.push([miniAppBtn]);
         const adminBtn = buildAdminButtonInline(buttons.admin);
         if (adminBtn) keyboard.push([adminBtn]);
+        const shippingBtn = buildShippingPostButton(shippingPost);
+        if (shippingBtn) keyboard.push([shippingBtn]);
       } else {
         const catalogCat = await this.categoriesService.findByType(CategoryType.CATALOG);
         keyboard.push([{ text: catalogCat?.name || 'Каталог', callback_data: 'catalog' }]);
@@ -96,9 +98,6 @@ export class MainMenuUpdate {
         const adminBtn = buildAdminButtonInline(buttons.admin);
         if (adminBtn) orderAdminRow.push(adminBtn);
         if (orderAdminRow.length) keyboard.push(orderAdminRow);
-
-        const shippingBtn = buildShippingPostButton(shippingPost);
-        if (shippingBtn) keyboard.push([shippingBtn]);
       }
 
       const caption = welcomePost?.description || 'Ласкаво просимо!';
