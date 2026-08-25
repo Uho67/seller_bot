@@ -13,6 +13,7 @@ import {
   buildChannelButtonInline,
   buildMainMenuButtonInline,
   buildSalePostButton,
+  buildMiniAppButton,
   getImagePath,
   sendOrEditWithMedia,
 } from '../bot.helpers';
@@ -61,29 +62,37 @@ export class MainMenuUpdate {
 
   async renderMainMenu(ctx: Context) {
     try {
-      const [welcomePost, salePost, buttons] = await Promise.all([
+      const [welcomePost, salePost, buttons, botSettings] = await Promise.all([
         this.welcomePostService.get(),
         this.salePostService.get(),
         this.buttonsService.getAll(),
+        this.buttonsService.getBotSettings(),
       ]);
 
       const keyboard: any[][] = [];
 
-      const catalogCat = await this.categoriesService.findByType(CategoryType.CATALOG);
-      keyboard.push([{ text: catalogCat?.name || 'Каталог', callback_data: 'catalog' }]);
+      if (botSettings?.mode === 'mini_app') {
+        const miniAppBtn = buildMiniAppButton(botSettings.mini_app_label, botSettings.mini_app_url);
+        if (miniAppBtn) keyboard.push([miniAppBtn]);
+        const adminBtn = buildAdminButtonInline(buttons.admin);
+        if (adminBtn) keyboard.push([adminBtn]);
+      } else {
+        const catalogCat = await this.categoriesService.findByType(CategoryType.CATALOG);
+        keyboard.push([{ text: catalogCat?.name || 'Каталог', callback_data: 'catalog' }]);
 
-      const saleBtn = buildSalePostButton(salePost);
-      if (saleBtn) keyboard.push([saleBtn]);
+        const saleBtn = buildSalePostButton(salePost);
+        if (saleBtn) keyboard.push([saleBtn]);
 
-      const channelBtn = buildChannelButtonInline(buttons.channel);
-      if (channelBtn) keyboard.push([channelBtn]);
+        const channelBtn = buildChannelButtonInline(buttons.channel);
+        if (channelBtn) keyboard.push([channelBtn]);
 
-      const orderAdminRow: any[] = [];
-      const orderBtn = buildOrderButtonRow(buttons.order);
-      if (orderBtn) orderAdminRow.push(orderBtn);
-      const adminBtn = buildAdminButtonInline(buttons.admin);
-      if (adminBtn) orderAdminRow.push(adminBtn);
-      if (orderAdminRow.length) keyboard.push(orderAdminRow);
+        const orderAdminRow: any[] = [];
+        const orderBtn = buildOrderButtonRow(buttons.order);
+        if (orderBtn) orderAdminRow.push(orderBtn);
+        const adminBtn = buildAdminButtonInline(buttons.admin);
+        if (adminBtn) orderAdminRow.push(adminBtn);
+        if (orderAdminRow.length) keyboard.push(orderAdminRow);
+      }
 
       const caption = welcomePost?.description || 'Ласкаво просимо!';
       const imagePath = getImagePath(welcomePost?.image);

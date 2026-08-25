@@ -13,6 +13,7 @@ interface TgWebApp {
   initDataUnsafe: { user?: { id: number; first_name?: string; last_name?: string; username?: string } };
   themeParams: ThemeParams;
   colorScheme: 'light' | 'dark';
+  platform: string;
   ready(): void;
   expand(): void;
   close(): void;
@@ -65,8 +66,16 @@ export function openLink(url: string) {
     window.open(url, '_blank');
     return;
   }
-  if (url.startsWith('https://t.me/') || url.startsWith('tg://')) {
+  if (url.startsWith('tg://')) {
     tg.openTelegramLink(url);
+  } else if (url.startsWith('https://t.me/')) {
+    // Telegram Desktop doesn't handle openTelegramLink reliably for t.me links;
+    // opening via the browser lets the OS protocol handler pick it up instead.
+    if (tg.platform === 'tdesktop') {
+      tg.openLink(url);
+    } else {
+      tg.openTelegramLink(url);
+    }
   } else {
     tg.openLink(url);
   }

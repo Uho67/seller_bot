@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
-import { Form, Input, Button, Card, Row, Col, message, Typography, Switch } from 'antd';
+import { Form, Input, Button, Card, Row, Col, message, Typography, Switch, Radio } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { buttonsApi } from '../api/buttons';
 import { extraButtonApi } from '../api/extra-button';
 import { appButtonApi } from '../api/app-button';
+import { botSettingsApi } from '../api/bot-settings';
 
 export function ButtonsPage() {
   const qc = useQueryClient();
@@ -23,12 +24,18 @@ export function ButtonsPage() {
     queryFn: () => appButtonApi.get().then((r) => r.data),
   });
 
+  const { data: botSettings } = useQuery({
+    queryKey: ['bot-settings'],
+    queryFn: () => botSettingsApi.get().then((r) => r.data),
+  });
+
   const [orderForm] = Form.useForm();
   const [adminForm] = Form.useForm();
   const [mainMenuForm] = Form.useForm();
   const [channelForm] = Form.useForm();
   const [extraForm] = Form.useForm();
   const [appButtonForm] = Form.useForm();
+  const [botSettingsForm] = Form.useForm();
 
   useEffect(() => {
     if (!buttons) return;
@@ -46,6 +53,10 @@ export function ButtonsPage() {
     if (appButton) appButtonForm.setFieldsValue(appButton);
   }, [appButton]);
 
+  useEffect(() => {
+    if (botSettings) botSettingsForm.setFieldsValue(botSettings);
+  }, [botSettings]);
+
   const makeMutation = (fn: (d: any) => Promise<any>, queryKey: string[]) =>
     useMutation({
       mutationFn: fn,
@@ -59,11 +70,37 @@ export function ButtonsPage() {
   const channelMut = makeMutation(buttonsApi.updateChannel, ['buttons']);
   const extraMut = makeMutation(extraButtonApi.update, ['extra-button']);
   const appButtonMut = makeMutation(appButtonApi.update, ['app-button']);
+  const botSettingsMut = makeMutation(botSettingsApi.update, ['bot-settings']);
 
   return (
     <div>
       <Typography.Title level={3}>Кнопки</Typography.Title>
       <Row gutter={[12, 12]}>
+        <Col xs={24}>
+          <Card title="Режим бота">
+            <Form form={botSettingsForm} layout="vertical" onFinish={(v) => botSettingsMut.mutate(v)}>
+              <Form.Item name="mode" label="Режим отображения главного меню">
+                <Radio.Group>
+                  <Radio value="catalog">Каталог (стандартный)</Radio>
+                  <Radio value="mini_app">Mini App</Radio>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item noStyle shouldUpdate={(prev, cur) => prev.mode !== cur.mode}>
+                {({ getFieldValue }) => getFieldValue('mode') === 'mini_app' && (
+                  <>
+                    <Form.Item name="mini_app_label" label="Текст кнопки Mini App">
+                      <Input placeholder="Відкрити" />
+                    </Form.Item>
+                    <Form.Item name="mini_app_url" label="URL Mini App (web_app)">
+                      <Input placeholder="https://…" />
+                    </Form.Item>
+                  </>
+                )}
+              </Form.Item>
+              <Button type="primary" htmlType="submit" loading={botSettingsMut.isPending} block>Сохранить</Button>
+            </Form>
+          </Card>
+        </Col>
         <Col xs={24} md={12}>
           <Card title="Кнопка Заказать">
             <Form form={orderForm} layout="vertical" onFinish={(v) => orderMut.mutate(v)}>

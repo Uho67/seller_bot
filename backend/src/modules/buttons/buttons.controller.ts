@@ -5,6 +5,7 @@ import { UpdateOrderButtonDto } from './dto/update-order-button.dto';
 import { UpdateAdminButtonDto } from './dto/update-admin-button.dto';
 import { UpdateMainMenuButtonDto } from './dto/update-main-menu-button.dto';
 import { UpdateChannelButtonDto } from './dto/update-channel-button.dto';
+import { UpdateBotSettingsDto } from './dto/update-bot-settings.dto';
 
 @Controller('buttons')
 export class ButtonsController {
@@ -29,4 +30,9 @@ export class ButtonsController {
 
   @UseGuards(JwtAuthGuard) @Patch('channel')
   updateChannel(@Body() dto: UpdateChannelButtonDto) { return this.service.updateChannelButton(dto); }
+
+  @Get('bot-settings') getBotSettings() { return this.service.getBotSettings(); }
+
+  @UseGuards(JwtAuthGuard) @Patch('bot-settings')
+  updateBotSettings(@Body() dto: UpdateBotSettingsDto) { return this.service.updateBotSettings(dto); }
 }

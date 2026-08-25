@@ -113,3 +113,8 @@ export function buildSalePostButton(salePost: SalePost) {
   if (!salePost?.is_enabled || !salePost?.name) return null;
   return { text: salePost.name, callback_data: 'sale_post' };
 }
+
+export function buildMiniAppButton(label: string, url: string) {
+  if (!url) return null;
+  return { text: label || 'Відкрити', web_app: { url } };
+}

@@ -4,11 +4,12 @@ import { OrderButton } from '../../database/entities/order-button.entity';
 import { AdminButton } from '../../database/entities/admin-button.entity';
 import { MainMenuButton } from '../../database/entities/main-menu-button.entity';
 import { ChannelButton } from '../../database/entities/channel-button.entity';
+import { BotSettings } from '../../database/entities/bot-settings.entity';
 import { ButtonsService } from './buttons.service';
 import { ButtonsController } from './buttons.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([OrderButton, AdminButton, MainMenuButton, ChannelButton])],
+  imports: [TypeOrmModule.forFeature([OrderButton, AdminButton, MainMenuButton, ChannelButton, BotSettings])],
   controllers: [ButtonsController],
   providers: [ButtonsService],
   exports: [ButtonsService],

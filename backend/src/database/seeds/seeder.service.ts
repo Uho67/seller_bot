@@ -12,6 +12,7 @@ import { MainMenuButton } from '../entities/main-menu-button.entity';
 import { ChannelButton } from '../entities/channel-button.entity';
 import { ExtraButton } from '../entities/extra-button.entity';
 import { AppButton } from '../entities/app-button.entity';
+import { BotSettings } from '../entities/bot-settings.entity';
 
 @Injectable()
 export class SeederService implements OnModuleInit {
@@ -26,6 +27,7 @@ export class SeederService implements OnModuleInit {
     @InjectRepository(ChannelButton) private channelBtnRepo: Repository<ChannelButton>,
     @InjectRepository(ExtraButton) private extraBtnRepo: Repository<ExtraButton>,
     @InjectRepository(AppButton) private appBtnRepo: Repository<AppButton>,
+    @InjectRepository(BotSettings) private botSettingsRepo: Repository<BotSettings>,
   ) {}
 
   async onModuleInit() {
@@ -90,6 +92,11 @@ export class SeederService implements OnModuleInit {
     const appBtn = await this.appBtnRepo.findOne({ where: { id: 1 } });
     if (!appBtn) {
       await this.appBtnRepo.save(this.appBtnRepo.create({ id: 1 }));
+    }
+
+    const botSettings = await this.botSettingsRepo.findOne({ where: { id: 1 } });
+    if (!botSettings) {
+      await this.botSettingsRepo.save(this.botSettingsRepo.create({ id: 1 }));
     }
   }
 

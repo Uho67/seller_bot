@@ -5,10 +5,12 @@ import { OrderButton } from '../../database/entities/order-button.entity';
 import { AdminButton } from '../../database/entities/admin-button.entity';
 import { MainMenuButton } from '../../database/entities/main-menu-button.entity';
 import { ChannelButton } from '../../database/entities/channel-button.entity';
+import { BotSettings } from '../../database/entities/bot-settings.entity';
 import { UpdateOrderButtonDto } from './dto/update-order-button.dto';
 import { UpdateAdminButtonDto } from './dto/update-admin-button.dto';
 import { UpdateMainMenuButtonDto } from './dto/update-main-menu-button.dto';
 import { UpdateChannelButtonDto } from './dto/update-channel-button.dto';
+import { UpdateBotSettingsDto } from './dto/update-bot-settings.dto';
 
 @Injectable()
 export class ButtonsService {
@@ -17,6 +19,7 @@ export class ButtonsService {
     @InjectRepository(AdminButton) private adminRepo: Repository<AdminButton>,
     @InjectRepository(MainMenuButton) private mainMenuRepo: Repository<MainMenuButton>,
     @InjectRepository(ChannelButton) private channelRepo: Repository<ChannelButton>,
+    @InjectRepository(BotSettings) private botSettingsRepo: Repository<BotSettings>,
   ) {}
 
   async getAll() {
@@ -56,5 +59,13 @@ export class ButtonsService {
     const btn = await this.getChannelButton();
     Object.assign(btn, dto);
     return this.channelRepo.save(btn);
+  }
+
+  getBotSettings() { return this.botSettingsRepo.findOne({ where: { id: 1 } }); }
+
+  async updateBotSettings(dto: UpdateBotSettingsDto) {
+    const settings = await this.getBotSettings();
+    Object.assign(settings, dto);
+    return this.botSettingsRepo.save(settings);
   }
 }
