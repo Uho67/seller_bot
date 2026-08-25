@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../api/client';
+import { api, trackEvent } from '../api/client';
 import { useBackButton } from '../telegram/useBackButton';
 import { ProductCard } from '../components/ProductCard';
 import { OrderButton } from '../components/OrderButton';
@@ -10,6 +10,7 @@ import { uk } from '../i18n/uk';
 export function AllProducts() {
   const navigate = useNavigate();
   useBackButton(useCallback(() => navigate(-1), [navigate]));
+  useEffect(() => { trackEvent('page_open', 'all_products'); }, []);
 
   const { data: products } = useQuery({ queryKey: ['products'], queryFn: api.getProducts });
   const enabled = (products ?? []).filter((p) => p.is_enabled);

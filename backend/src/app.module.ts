@@ -20,6 +20,7 @@ import { MailoutModule } from './modules/mailout/mailout.module';
 import { BotModule } from './modules/bot/bot.module';
 import { BackupModule } from './modules/backup/backup.module';
 import { AppWelcomePostModule } from './modules/app-welcome-post/app-welcome-post.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { AppWelcomePostModule } from './modules/app-welcome-post/app-welcome-pos
     BotModule,
     BackupModule,
     AppWelcomePostModule,
+    AnalyticsModule,
   ],
 })
 export class AppModule {}

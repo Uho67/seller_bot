@@ -13,12 +13,14 @@ import { ChannelButton } from './entities/channel-button.entity';
 import { ExtraButton } from './entities/extra-button.entity';
 import { AppButton } from './entities/app-button.entity';
 import { BotSettings } from './entities/bot-settings.entity';
+import { WebappEvent } from './entities/webapp-event.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       CategoryPost, WelcomePost, SalePost, ShippingPost, Admin,
       OrderButton, AdminButton, MainMenuButton, ChannelButton, ExtraButton, AppButton, BotSettings,
+      WebappEvent,
     ]),
   ],
   providers: [SeederService],

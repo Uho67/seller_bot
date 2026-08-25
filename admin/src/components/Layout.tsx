@@ -4,7 +4,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../store/auth';
 import {
   AppstoreOutlined, ShoppingOutlined, TagsOutlined, StarOutlined,
-  GiftOutlined, SettingOutlined, TeamOutlined, MailOutlined, LogoutOutlined, MenuOutlined, CarOutlined,
+  GiftOutlined, SettingOutlined, TeamOutlined, MailOutlined, LogoutOutlined, MenuOutlined, CarOutlined, BarChartOutlined,
 } from '@ant-design/icons';
 
 const { useBreakpoint } = Grid;
@@ -21,6 +21,7 @@ const menuItems = [
   { key: '/buttons', icon: <SettingOutlined />, label: 'Кнопки' },
   { key: '/users', icon: <TeamOutlined />, label: 'Пользователи' },
   { key: '/mailout', icon: <MailOutlined />, label: 'Рассылка' },
+  { key: '/analytics', icon: <BarChartOutlined />, label: 'Аналітика' },
 ];
 
 const logoutItem = [{ key: 'logout', icon: <LogoutOutlined />, label: 'Выйти' }];

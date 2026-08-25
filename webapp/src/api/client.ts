@@ -82,6 +82,15 @@ export function postSession(initData: string) {
   return client.post('/webapp/session', { initData });
 }
 
+export function trackEvent(event: string, label?: string): void {
+  const chatId = (window as any)?.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+  client.post('/analytics/event', {
+    event,
+    label: label ?? null,
+    chat_id: chatId ? String(chatId) : null,
+  }).catch(() => {});
+}
+
 export function imageUrl(name: string | null | undefined): string | undefined {
   if (!name) return undefined;
   return `/uploads/${name}`;

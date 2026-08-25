@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { api, imageUrl } from '../api/client';
+import { api, imageUrl, trackEvent } from '../api/client';
 import { useBackButton } from '../telegram/useBackButton';
 import { uk } from '../i18n/uk';
 import { OrderButton } from '../components/OrderButton';
@@ -9,6 +9,7 @@ import { OrderButton } from '../components/OrderButton';
 export function Categories() {
   const navigate = useNavigate();
   useBackButton(useCallback(() => navigate(-1), [navigate]));
+  useEffect(() => { trackEvent('page_open', 'categories'); }, []);
 
   const { data } = useQuery({ queryKey: ['categories'], queryFn: api.getCategories });
 
@@ -24,7 +25,7 @@ export function Categories() {
           {cats.map((c) => {
             const img = imageUrl(c.image);
             return (
-              <button key={c.id} className="list-row" onClick={() => navigate(`/categories/${c.id}`)}>
+              <button key={c.id} className="list-row" onClick={() => { trackEvent('category_click', c.name); navigate(`/categories/${c.id}`); }}>
                 {img && <img src={img} alt="" loading="lazy" />}
                 <span>{c.name}</span>
               </button>

@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { api } from '../api/client';
+import { api, trackEvent } from '../api/client';
 import { useBackButton } from '../telegram/useBackButton';
 import { ProductCard } from '../components/ProductCard';
 import { OrderButton } from '../components/OrderButton';
@@ -12,6 +12,7 @@ export function CategoryProducts() {
   useBackButton(useCallback(() => navigate(-1), [navigate]));
   const { id } = useParams();
   const categoryId = Number(id);
+  useEffect(() => { trackEvent('page_open', 'category_products'); }, []);
 
   const { data: products } = useQuery({ queryKey: ['products'], queryFn: api.getProducts });
   const { data: categories } = useQuery({ queryKey: ['categories'], queryFn: api.getCategories });
