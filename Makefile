@@ -10,7 +10,8 @@ first-deploy:
 	docker compose up -d --build
 
 deploy:
-	docker compose up -d --build
+	DOCKER_BUILDKIT=0 docker compose build
+	docker compose up -d
 
 shell:
 	docker exec -it $(CONTAINER_NAME) sh
