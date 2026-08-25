@@ -18,6 +18,7 @@ export function installTelegramMock() {
         secondary_bg_color: '#f2f2f7',
       },
       colorScheme: 'light',
+      platform: 'unknown',
       ready() { console.log('[tg-mock] ready'); },
       expand() { console.log('[tg-mock] expand'); },
       close() { console.log('[tg-mock] close'); },
