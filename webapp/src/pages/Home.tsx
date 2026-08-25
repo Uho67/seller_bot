@@ -31,7 +31,7 @@ export function Home() {
         {sale?.is_enabled && (
           <button className="list-row list-row-centered list-row-sale" onClick={() => navigate('/sale')}>
             {saleImg && <img src={saleImg} alt="" loading="lazy" />}
-            <span>{uk.home.tiles.sale}</span>
+            <span>{sale?.name || uk.home.tiles.sale}</span>
           </button>
         )}
         {enabledCategories.map((cat) => {
