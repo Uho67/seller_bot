@@ -4,6 +4,7 @@ import { SeederService } from './seeds/seeder.service';
 import { CategoryPost } from './entities/category-post.entity';
 import { WelcomePost } from './entities/welcome-post.entity';
 import { SalePost } from './entities/sale-post.entity';
+import { ShippingPost } from './entities/shipping-post.entity';
 import { Admin } from './entities/admin.entity';
 import { OrderButton } from './entities/order-button.entity';
 import { AdminButton } from './entities/admin-button.entity';
@@ -16,7 +17,7 @@ import { BotSettings } from './entities/bot-settings.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      CategoryPost, WelcomePost, SalePost, Admin,
+      CategoryPost, WelcomePost, SalePost, ShippingPost, Admin,
       OrderButton, AdminButton, MainMenuButton, ChannelButton, ExtraButton, AppButton, BotSettings,
     ]),
   ],

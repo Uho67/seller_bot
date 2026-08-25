@@ -35,5 +35,5 @@ COPY --from=backend-builder /app/package.json ./package.json
 COPY --from=admin-builder /admin/dist ./public-admin
 COPY --from=webapp-builder /webapp/dist ./public-webapp
 RUN mkdir -p uploads data backups public-admin public-webapp
-EXPOSE 3012
+EXPOSE 3011
 CMD ["node", "dist/main.js"]

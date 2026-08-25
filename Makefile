@@ -1,7 +1,7 @@
 -include .env
 export
 
-CONTAINER_NAME ?= aromagood
+CONTAINER_NAME ?= podhub
 
 .PHONY: first-deploy deploy shell logs
 

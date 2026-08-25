@@ -7,6 +7,7 @@ import { MainMenuButton } from '../../database/entities/main-menu-button.entity'
 import { ChannelButton } from '../../database/entities/channel-button.entity';
 import { ProductPost } from '../../database/entities/product-post.entity';
 import { SalePost } from '../../database/entities/sale-post.entity';
+import { ShippingPost } from '../../database/entities/shipping-post.entity';
 
 export function buildOrderButtonRow(btn: OrderButton) {
   if (!btn?.telegram_user_link) return null;
@@ -112,6 +113,11 @@ export async function sendOrEditWithMedia(
 export function buildSalePostButton(salePost: SalePost) {
   if (!salePost?.is_enabled || !salePost?.name) return null;
   return { text: salePost.name, callback_data: 'sale_post' };
+}
+
+export function buildShippingPostButton(shippingPost: ShippingPost) {
+  if (!shippingPost?.is_enabled || !shippingPost?.name) return null;
+  return { text: shippingPost.name, callback_data: 'shipping_post' };
 }
 
 export function buildMiniAppButton(label: string, url: string) {

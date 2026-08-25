@@ -3,6 +3,7 @@ import { Context } from 'telegraf';
 import { UsersService } from '../../users/users.service';
 import { WelcomePostService } from '../../welcome-post/welcome-post.service';
 import { SalePostService } from '../../sale-post/sale-post.service';
+import { ShippingPostService } from '../../shipping-post/shipping-post.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { ButtonsService } from '../../buttons/buttons.service';
 import { AppButtonService } from '../../app-button/app-button.service';
@@ -13,6 +14,7 @@ import {
   buildChannelButtonInline,
   buildMainMenuButtonInline,
   buildSalePostButton,
+  buildShippingPostButton,
   buildMiniAppButton,
   getImagePath,
   sendOrEditWithMedia,
@@ -24,6 +26,7 @@ export class MainMenuUpdate {
     private usersService: UsersService,
     private welcomePostService: WelcomePostService,
     private salePostService: SalePostService,
+    private shippingPostService: ShippingPostService,
     private categoriesService: CategoriesService,
     private buttonsService: ButtonsService,
     private appButtonService: AppButtonService,
@@ -62,9 +65,10 @@ export class MainMenuUpdate {
 
   async renderMainMenu(ctx: Context) {
     try {
-      const [welcomePost, salePost, buttons, botSettings] = await Promise.all([
+      const [welcomePost, salePost, shippingPost, buttons, botSettings] = await Promise.all([
         this.welcomePostService.get(),
         this.salePostService.get(),
+        this.shippingPostService.get(),
         this.buttonsService.getAll(),
         this.buttonsService.getBotSettings(),
       ]);
@@ -92,6 +96,9 @@ export class MainMenuUpdate {
         const adminBtn = buildAdminButtonInline(buttons.admin);
         if (adminBtn) orderAdminRow.push(adminBtn);
         if (orderAdminRow.length) keyboard.push(orderAdminRow);
+
+        const shippingBtn = buildShippingPostButton(shippingPost);
+        if (shippingBtn) keyboard.push([shippingBtn]);
       }
 
       const caption = welcomePost?.description || 'Ласкаво просимо!';

@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { CategoryPost, CategoryType } from '../entities/category-post.entity';
 import { WelcomePost } from '../entities/welcome-post.entity';
 import { SalePost } from '../entities/sale-post.entity';
+import { ShippingPost } from '../entities/shipping-post.entity';
 import { Admin } from '../entities/admin.entity';
 import { OrderButton } from '../entities/order-button.entity';
 import { AdminButton } from '../entities/admin-button.entity';
@@ -20,6 +21,7 @@ export class SeederService implements OnModuleInit {
     @InjectRepository(CategoryPost) private categoryRepo: Repository<CategoryPost>,
     @InjectRepository(WelcomePost) private welcomeRepo: Repository<WelcomePost>,
     @InjectRepository(SalePost) private saleRepo: Repository<SalePost>,
+    @InjectRepository(ShippingPost) private shippingRepo: Repository<ShippingPost>,
     @InjectRepository(Admin) private adminRepo: Repository<Admin>,
     @InjectRepository(OrderButton) private orderBtnRepo: Repository<OrderButton>,
     @InjectRepository(AdminButton) private adminBtnRepo: Repository<AdminButton>,
@@ -60,6 +62,11 @@ export class SeederService implements OnModuleInit {
     const sale = await this.saleRepo.findOne({ where: { id: 1 } });
     if (!sale) {
       await this.saleRepo.save(this.saleRepo.create({ id: 1, name: 'Акцiя', is_enabled: false }));
+    }
+
+    const shipping = await this.shippingRepo.findOne({ where: { id: 1 } });
+    if (!shipping) {
+      await this.shippingRepo.save(this.shippingRepo.create({ id: 1, name: 'Доставка', is_enabled: false }));
     }
   }
 

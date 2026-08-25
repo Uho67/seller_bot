@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/mac/projects/backups/docker/**)",
+      "Read(//Users/mac/projects/backups/**)",
+      "Bash(/Users/mac/.claude/skills/brainstorming/scripts/start-server.sh *)",
+      "Bash(/Users/mac/.claude/skills/brainstorming/scripts/stop-server.sh /Users/mac/projects/aromagood/.superpowers/brainstorm/81926-1787516569)",
+      "Bash(npx tsc *)",
+      "Bash(./node_modules/.bin/tsc --noEmit)",
+      "Bash(grep -E \"^tsc$\")",
+      "Bash(npm install *)",
+      "Bash(./node_modules/.bin/vite build *)",
+      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
+      "Bash(npx --yes tsc --noEmit)",
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "Bash(node_modules/typescript/bin/tsc --noEmit)",
+      "Bash(npm run *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(grep -E \"\\\\.\\(ts|sql\\)$\")",
+      "Bash(node node_modules/typescript/bin/tsc --noEmit)"
+    ]
+  }
+}

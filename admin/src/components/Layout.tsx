@@ -4,7 +4,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../store/auth';
 import {
   AppstoreOutlined, ShoppingOutlined, TagsOutlined, StarOutlined,
-  GiftOutlined, SettingOutlined, TeamOutlined, MailOutlined, LogoutOutlined, MenuOutlined,
+  GiftOutlined, SettingOutlined, TeamOutlined, MailOutlined, LogoutOutlined, MenuOutlined, CarOutlined,
 } from '@ant-design/icons';
 
 const { useBreakpoint } = Grid;
@@ -17,6 +17,7 @@ const menuItems = [
   { key: '/welcome-post', icon: <StarOutlined />, label: 'Welcome Post (бот)' },
   { key: '/app-welcome-post', icon: <StarOutlined />, label: 'Welcome Post (App)' },
   { key: '/sale-post', icon: <GiftOutlined />, label: 'Акция' },
+  { key: '/shipping-post', icon: <CarOutlined />, label: 'Доставка' },
   { key: '/buttons', icon: <SettingOutlined />, label: 'Кнопки' },
   { key: '/users', icon: <TeamOutlined />, label: 'Пользователи' },
   { key: '/mailout', icon: <MailOutlined />, label: 'Рассылка' },
@@ -60,7 +61,7 @@ export function AdminLayout() {
             onClick={() => setDrawerOpen(true)}
             style={{ padding: 4 }}
           />
-          <span style={{ color: '#fff', fontWeight: 'bold', fontSize: 17 }}>aromagood</span>
+          <span style={{ color: '#fff', fontWeight: 'bold', fontSize: 17 }}>PodHub</span>
         </Header>
         <Drawer
           title={<span style={{ color: '#fff' }}>Меню</span>}
@@ -100,7 +101,7 @@ export function AdminLayout() {
     <AntLayout style={{ minHeight: '100vh' }}>
       <Sider theme="dark">
         <div style={{ color: '#fff', textAlign: 'center', padding: '16px', fontWeight: 'bold', fontSize: 16 }}>
-          aromagood
+          PodHub
         </div>
         <Menu
           theme="dark"

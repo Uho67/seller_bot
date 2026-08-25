@@ -10,6 +10,7 @@ import { ProductsModule } from './modules/products/products.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { WelcomePostModule } from './modules/welcome-post/welcome-post.module';
 import { SalePostModule } from './modules/sale-post/sale-post.module';
+import { ShippingPostModule } from './modules/shipping-post/shipping-post.module';
 import { ButtonsModule } from './modules/buttons/buttons.module';
 import { ExtraButtonModule } from './modules/extra-button/extra-button.module';
 import { AppButtonModule } from './modules/app-button/app-button.module';
@@ -56,6 +57,7 @@ import { AppWelcomePostModule } from './modules/app-welcome-post/app-welcome-pos
     CategoriesModule,
     WelcomePostModule,
     SalePostModule,
+    ShippingPostModule,
     ButtonsModule,
     ExtraButtonModule,
     AppButtonModule,
