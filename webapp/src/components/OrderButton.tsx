@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { api } from '../api/client';
+import { api, trackEvent } from '../api/client';
 import { openLink } from '../telegram/webApp';
 import { uk } from '../i18n/uk';
 
@@ -15,6 +15,7 @@ export function OrderButton({ floating = true }: { floating?: boolean }) {
 
   const onClick = () => {
     if (!url) return;
+    trackEvent('order_click');
     const finalUrl = prefill
       ? `${url}${url.includes('?') ? '&' : '?'}text=${encodeURIComponent(prefill)}`
       : url;

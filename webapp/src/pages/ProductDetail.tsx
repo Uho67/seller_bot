@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { api, imageUrl } from '../api/client';
+import { api, imageUrl, trackEvent } from '../api/client';
 import { useBackButton } from '../telegram/useBackButton';
 import { OrderButton } from '../components/OrderButton';
 
@@ -10,6 +10,7 @@ export function ProductDetail() {
   useBackButton(useCallback(() => navigate(-1), [navigate]));
   const { id } = useParams();
   const productId = Number(id);
+  useEffect(() => { trackEvent('page_open', 'product_detail'); }, []);
 
   const { data: product } = useQuery({
     queryKey: ['product', productId],

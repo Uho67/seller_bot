@@ -1,12 +1,14 @@
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { api, imageUrl } from '../api/client';
+import { api, imageUrl, trackEvent } from '../api/client';
 import { openLink } from '../telegram/webApp';
 import { OrderButton } from '../components/OrderButton';
 import { uk } from '../i18n/uk';
 
 export function Home() {
   const navigate = useNavigate();
+  useEffect(() => { trackEvent('page_open', 'home'); }, []);
 
   const { data: welcome } = useQuery({ queryKey: ['app-welcome'], queryFn: api.getAppWelcomePost });
   const { data: sale } = useQuery({ queryKey: ['sale'], queryFn: api.getSalePost });
@@ -29,7 +31,7 @@ export function Home() {
       </div>
       <div className="list">
         {sale?.is_enabled && (
-          <button className="list-row list-row-centered list-row-sale" onClick={() => navigate('/sale')}>
+          <button className="list-row list-row-centered list-row-sale" onClick={() => { trackEvent('sale_click'); navigate('/sale'); }}>
             {saleImg && <img src={saleImg} alt="" loading="lazy" />}
             <span>{sale?.name || uk.home.tiles.sale}</span>
           </button>
@@ -37,14 +39,14 @@ export function Home() {
         {enabledCategories.map((cat) => {
           const img = imageUrl(cat.image);
           return (
-            <button key={cat.id} className="list-row" onClick={() => navigate(`/categories/${cat.id}`)}>
+            <button key={cat.id} className="list-row" onClick={() => { trackEvent('category_click', cat.name); navigate(`/categories/${cat.id}`); }}>
               {img && <img src={img} alt="" loading="lazy" />}
               <span>{cat.name}</span>
             </button>
           );
         })}
         {channelUrl && (
-          <button className="list-row list-row-centered" onClick={() => openLink(channelUrl)}>
+          <button className="list-row list-row-centered" onClick={() => { trackEvent('channel_click'); openLink(channelUrl); }}>
             <span>{buttons?.channel?.name || uk.home.tiles.channel}</span>
           </button>
         )}
