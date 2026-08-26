@@ -143,7 +143,10 @@ export class MailoutService {
           record.message_id = String(msgId);
           sent++;
         } catch (err: any) {
-          if (err?.response?.error_code === 403) {
+          const code = err?.response?.error_code;
+          const desc = err?.response?.description ?? err?.message ?? String(err);
+          this.logger.warn(`Send failed chat_id=${record.chat_id} code=${code} desc="${desc}"`);
+          if (code === 403) {
             await this.usersService.setInactive(record.chat_id);
           }
           record.is_sent = true;
