@@ -1,13 +1,14 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { api, imageUrl } from '../api/client';
+import { api, imageUrl, trackEvent } from '../api/client';
 import { useBackButton } from '../telegram/useBackButton';
 import { OrderButton } from '../components/OrderButton';
 
 export function SalePost() {
   const navigate = useNavigate();
   useBackButton(useCallback(() => navigate(-1), [navigate]));
+  useEffect(() => { trackEvent('page_open', 'sale'); }, []);
 
   const { data } = useQuery({ queryKey: ['sale'], queryFn: api.getSalePost });
   const img = imageUrl(data?.image);

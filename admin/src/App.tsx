@@ -14,6 +14,7 @@ import { SalePostPage } from './pages/SalePost';
 import { ButtonsPage } from './pages/Buttons';
 import { UsersPage } from './pages/Users';
 import { MailoutPage } from './pages/Mailout';
+import { AnalyticsPage } from './pages/Analytics';
 
 export default function App() {
   return (
@@ -39,6 +40,7 @@ export default function App() {
               <Route path="buttons" element={<ButtonsPage />} />
               <Route path="users" element={<UsersPage />} />
               <Route path="mailout" element={<MailoutPage />} />
+              <Route path="analytics" element={<AnalyticsPage />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
