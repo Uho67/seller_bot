@@ -15,6 +15,10 @@ export class AnalyticsService {
     await this.repo.save(this.repo.create(dto));
   }
 
+  async clearAll(): Promise<void> {
+    await this.repo.clear();
+  }
+
   async getStats() {
     const total = await this.repo.count();
 

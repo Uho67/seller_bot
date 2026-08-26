@@ -20,4 +20,5 @@ export interface AnalyticsStats {
 
 export const analyticsApi = {
   getStats: () => client.get<AnalyticsStats>('/analytics/stats').then((r) => r.data),
+  clearAll: () => client.delete('/analytics/all').then((r) => r.data),
 };

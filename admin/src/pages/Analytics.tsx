@@ -1,5 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import { Card, Col, Row, Table, Typography } from 'antd';
+import { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Button, Card, Col, Popconfirm, Row, Table, Typography } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import { analyticsApi, EventStat, DayStat } from '../api/analytics';
 
 const { Title } = Typography;
@@ -22,11 +24,21 @@ const PAGE_LABELS: Record<string, string> = {
 };
 
 export function AnalyticsPage() {
+  const queryClient = useQueryClient();
+  const [clearing, setClearing] = useState(false);
+
   const { data, isLoading } = useQuery({
     queryKey: ['analytics-stats'],
     queryFn: analyticsApi.getStats,
     refetchInterval: 30_000,
   });
+
+  const handleClear = async () => {
+    setClearing(true);
+    await analyticsApi.clearAll();
+    await queryClient.invalidateQueries({ queryKey: ['analytics-stats'] });
+    setClearing(false);
+  };
 
   const today = new Date().toISOString().slice(0, 10);
   const todayCount = data?.byDay.find((d) => d.date === today)?.count ?? 0;
@@ -60,7 +72,21 @@ export function AnalyticsPage() {
 
   return (
     <div>
-      <Title level={3}>Аналітика Webapp</Title>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <Title level={3} style={{ margin: 0 }}>Аналітика Webapp</Title>
+        <Popconfirm
+          title="Очистити всю аналітику?"
+          description="Це видалить усі записані події безповоротно."
+          okText="Так, очистити"
+          cancelText="Скасувати"
+          okButtonProps={{ danger: true }}
+          onConfirm={handleClear}
+        >
+          <Button danger icon={<DeleteOutlined />} loading={clearing}>
+            Очистити
+          </Button>
+        </Popconfirm>
+      </div>
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         <Col xs={24} sm={8}>
           <Card>
