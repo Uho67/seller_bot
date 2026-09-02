@@ -3,10 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: flow_bot
+    container_name: lunvo_new
     restart: unless-stopped
     ports:
-      - "3007:3007"
+      - "3004:3004"
     volumes:
       - ./backend/data:/app/data
       - ./backend/backups:/app/backups

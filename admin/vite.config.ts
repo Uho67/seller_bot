@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const basePath = env.VITE_BASE_PATH || '/pachka';
+  const basePath = env.VITE_BASE_PATH || '/lunvo_new';
 
   return {
     plugins: [react()],
@@ -11,12 +11,12 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         [`${basePath}/api`]: {
-          target: 'http://localhost:3007',
+          target: 'http://localhost:3004',
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp(`^${basePath}`), ''),
         },
         [`${basePath}/uploads`]: {
-          target: 'http://localhost:3007',
+          target: 'http://localhost:3004',
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp(`^${basePath}`), ''),
         },

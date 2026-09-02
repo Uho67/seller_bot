@@ -2,10 +2,10 @@
 
 ## Stack
 
-- **Backend**: NestJS, port `3007`
+- **Backend**: NestJS, port `3004`
 - **Admin panel**: React (Vite) — built inside Docker, served by the backend at `/`
 - **Web server**: Nginx (reverse proxy)
-- **Domain**: `https://uho.kharkiv.ua/flow`
+- **Domain**: `https://uho.kharkiv.ua/lunvo_new`
 - **Runtime**: Docker (single container for backend + admin)
 
 ---
@@ -24,18 +24,18 @@ sudo systemctl enable --now docker
 
 ```bash
 cd /var/www
-git clone <your-repo-url> siga_first
-cd siga_first
+git clone <your-repo-url> lunvo_new
+cd lunvo_new
 ```
 
 ---
 
 ## 3. Backend environment
 
-Create `/var/www/siga_first/backend/.env`:
+Create `/var/www/lunvo_new/backend/.env`:
 
 ```env
-PORT=3007
+PORT=3004
 BOT_TOKEN=your_telegram_bot_token_here
 JWT_SECRET=some_long_random_secret
 ADMIN_PANEL_ORIGIN=https://uho.kharkiv.ua
@@ -46,7 +46,7 @@ ADMIN_PANEL_ORIGIN=https://uho.kharkiv.ua
 ## 4. Build and start (one command)
 
 ```bash
-cd /var/www/siga_first
+cd /var/www/lunvo_new
 docker compose up -d --build
 ```
 
@@ -56,8 +56,8 @@ Verify:
 
 ```bash
 docker compose ps
-curl http://localhost:3007/api
-curl http://localhost:3007          # should return admin panel HTML
+curl http://localhost:3004/api
+curl http://localhost:3004          # should return admin panel HTML
 ```
 
 View logs:
@@ -72,7 +72,7 @@ docker compose logs -f
 
 Since the Docker container serves both the admin panel and the API, nginx only needs to proxy everything to the container.
 
-Create `/etc/nginx/sites-available/flow`:
+Create `/etc/nginx/sites-available/lunvo_new`:
 
 ```nginx
 server {
@@ -80,9 +80,9 @@ server {
     server_name uho.kharkiv.ua;
 
     # Proxy everything to the Docker container
-    location /flow/ {
-        rewrite ^/flow/(.*)$ /$1 break;
-        proxy_pass http://localhost:3007;
+    location /lunvo_new/ {
+        rewrite ^/lunvo_new/(.*)$ /$1 break;
+        proxy_pass http://localhost:3004;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -95,7 +95,7 @@ server {
 Enable and test:
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/flow /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/lunvo_new /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -114,19 +114,19 @@ sudo systemctl reload nginx
 
 ## 7. URL summary
 
-| Resource        | URL                                      |
-|-----------------|------------------------------------------|
-| Admin panel     | `https://uho.kharkiv.ua/flow/`        |
-| REST API        | `https://uho.kharkiv.ua/flow/api/`    |
-| Uploaded images | `https://uho.kharkiv.ua/flow/uploads/`|
-| Container direct| `http://localhost:3007` (internal only)  |
+| Resource        | URL                                           |
+|-----------------|-----------------------------------------------|
+| Admin panel     | `https://uho.kharkiv.ua/lunvo_new/`        |
+| REST API        | `https://uho.kharkiv.ua/lunvo_new/api/`    |
+| Uploaded images | `https://uho.kharkiv.ua/lunvo_new/uploads/`|
+| Container direct| `http://localhost:3004` (internal only)       |
 
 ---
 
 ## 8. Redeploy after changes
 
 ```bash
-cd /var/www/siga_first
+cd /var/www/lunvo_new
 git pull
 docker compose up -d --build
 ```
