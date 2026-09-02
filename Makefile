@@ -9,7 +9,7 @@ deploy:
 	docker compose up -d --build
 
 shell:
-	docker exec -it siga_bot sh
+	docker exec -it lunvo_new sh
 
 logs:
 	docker compose logs -f

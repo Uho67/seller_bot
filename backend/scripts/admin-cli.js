@@ -98,7 +98,7 @@ async function main() {
       break;
     default:
       console.log(`
-Admin CLI — manage siga_bot admin accounts
+Admin CLI — manage lunvo_new admin accounts
 
 Commands:
   list                          List all admins
