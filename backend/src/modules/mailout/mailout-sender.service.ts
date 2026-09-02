@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import * as fs from 'fs';
-import * as path from 'path';
 import { PostType } from '../../database/entities/mailout.entity';
 import { ButtonsService } from '../buttons/buttons.service';
 import { CategoriesService } from '../categories/categories.service';
@@ -12,6 +11,7 @@ import {
   buildAdminButtonInline,
   buildChannelButtonInline,
   buildMainMenuButtonInline,
+  getImagePath,
 } from '../bot/bot.helpers';
 
 @Injectable()
@@ -71,20 +71,18 @@ export class MailoutSenderService {
       return { msgId: res.message_id, fileId: null };
     }
 
-    if (post?.image) {
-      const imagePath = path.join(__dirname, '..', '..', '..', '..', 'uploads', post.image);
-      if (fs.existsSync(imagePath)) {
-        const res = await this.bot.telegram.sendPhoto(
-          chatId,
-          { source: fs.createReadStream(imagePath) },
-          { caption, reply_markup, parse_mode: 'HTML' },
-        );
-        const fileId =
-          Array.isArray(res.photo) && res.photo.length > 0
-            ? res.photo[res.photo.length - 1].file_id
-            : null;
-        return { msgId: res.message_id, fileId };
-      }
+    const imagePath = getImagePath(post?.image);
+    if (imagePath) {
+      const res = await this.bot.telegram.sendPhoto(
+        chatId,
+        { source: fs.createReadStream(imagePath) },
+        { caption, reply_markup, parse_mode: 'HTML' },
+      );
+      const fileId =
+        Array.isArray(res.photo) && res.photo.length > 0
+          ? res.photo[res.photo.length - 1].file_id
+          : null;
+      return { msgId: res.message_id, fileId };
     }
 
     const res = await this.bot.telegram.sendMessage(chatId, caption || 'Post', { reply_markup, parse_mode: 'HTML' });
