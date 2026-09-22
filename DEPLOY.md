@@ -2,11 +2,11 @@
 
 ## Stack
 
-- **Backend**: NestJS, port `3009`
+- **Backend**: NestJS, port `3011`
 - **Admin panel**: React (Vite) — built inside Docker, served by the backend at `/`
 - **Web server**: Nginx (reverse proxy)
-- **Domain**: `https://uho.kharkiv.ua/siga_2`
-- **Runtime**: Docker (single container for backend + admin)
+- **Domain**: `https://uho.kharkiv.ua/smoke`
+- **Runtime**: Docker (single container for backend + admin), image/container name: `smoke`
 
 ---
 
@@ -24,18 +24,18 @@ sudo systemctl enable --now docker
 
 ```bash
 cd /var/www
-git clone <your-repo-url> pachka
-cd pachka
+git clone <your-repo-url> smoke
+cd smoke
 ```
 
 ---
 
 ## 3. Backend environment
 
-Create `/var/www/pachka/backend/.env`:
+Create `/var/www/smoke/backend/.env`:
 
 ```env
-PORT=3009
+PORT=3011
 BOT_TOKEN=your_telegram_bot_token_here
 JWT_SECRET=some_long_random_secret
 ADMIN_PANEL_ORIGIN=https://uho.kharkiv.ua
@@ -46,7 +46,7 @@ ADMIN_PANEL_ORIGIN=https://uho.kharkiv.ua
 ## 4. Build and start (one command)
 
 ```bash
-cd /var/www/pachka
+cd /var/www/smoke
 docker compose up -d --build
 ```
 
@@ -56,8 +56,8 @@ Verify:
 
 ```bash
 docker compose ps
-curl http://localhost:3009/api
-curl http://localhost:3009          # should return admin panel HTML
+curl http://localhost:3011/api
+curl http://localhost:3011          # should return admin panel HTML
 ```
 
 View logs:
@@ -72,7 +72,7 @@ docker compose logs -f
 
 Since the Docker container serves both the admin panel and the API, nginx only needs to proxy everything to the container.
 
-Create `/etc/nginx/sites-available/pachka`:
+Create `/etc/nginx/sites-available/smoke`:
 
 ```nginx
 server {
@@ -80,9 +80,9 @@ server {
     server_name uho.kharkiv.ua;
 
     # Proxy everything to the Docker container
-    location /pachka/ {
-        rewrite ^/pachka/(.*)$ /$1 break;
-        proxy_pass http://localhost:3009;
+    location /smoke/ {
+        rewrite ^/smoke/(.*)$ /$1 break;
+        proxy_pass http://localhost:3011;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -95,7 +95,7 @@ server {
 Enable and test:
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/pachka /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/smoke /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -116,17 +116,17 @@ sudo systemctl reload nginx
 
 | Resource        | URL                                      |
 |-----------------|------------------------------------------|
-| Admin panel     | `https://uho.kharkiv.ua/pachka/`        |
-| REST API        | `https://uho.kharkiv.ua/pachka/api/`    |
-| Uploaded images | `https://uho.kharkiv.ua/pachka/uploads/`|
-| Container direct| `http://localhost:3009` (internal only)  |
+| Admin panel     | `https://uho.kharkiv.ua/smoke/`         |
+| REST API        | `https://uho.kharkiv.ua/smoke/api/`     |
+| Uploaded images | `https://uho.kharkiv.ua/smoke/uploads/` |
+| Container direct| `http://localhost:3011` (internal only)  |
 
 ---
 
 ## 8. Redeploy after changes
 
 ```bash
-cd /var/www/pachka
+cd /var/www/smoke
 git pull
 docker compose up -d --build
 ```

@@ -60,6 +60,27 @@ async function updatePassword(db, name, password) {
   console.log(`Password updated for "${name}".`);
 }
 
+function deleteAllUsers(db) {
+  const { count } = db.prepare('SELECT COUNT(*) as count FROM user').get();
+  if (count === 0) {
+    console.log('No users found.');
+    return;
+  }
+  db.prepare('DELETE FROM user').run();
+  console.log(`Deleted ${count} user(s).`);
+}
+
+function resetFileIds(db) {
+  const tables = ['sale_post', 'category_post', 'welcome_post', 'product_post'];
+  let total = 0;
+  for (const table of tables) {
+    const { changes } = db.prepare(`UPDATE ${table} SET telegram_file_id = NULL WHERE telegram_file_id IS NOT NULL`).run();
+    if (changes > 0) console.log(`  ${table}: cleared ${changes} row(s)`);
+    total += changes;
+  }
+  console.log(`Done. ${total} telegram_file_id(s) reset to NULL.`);
+}
+
 function deleteAdmin(db, name) {
   if (!name) {
     console.error('Usage: admin-cli delete <name>');
@@ -96,6 +117,12 @@ async function main() {
     case 'delete':
       deleteAdmin(db, args[0]);
       break;
+    case 'delete-all-users':
+      deleteAllUsers(db);
+      break;
+    case 'reset-file-ids':
+      resetFileIds(db);
+      break;
     default:
       console.log(`
 Admin CLI — manage siga_bot admin accounts
@@ -105,6 +132,8 @@ Commands:
   create <name> <password>      Create a new admin
   update-password <name> <pwd>  Change an admin's password
   delete <name>                 Delete an admin (cannot delete last one)
+  delete-all-users              Delete all Telegram bot users
+  reset-file-ids                Set telegram_file_id = NULL in all post tables
 
 Environment:
   DB_PATH   Path to SQLite file (default: ./data/database.sqlite)

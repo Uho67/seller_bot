@@ -59,7 +59,7 @@ export function AdminLayout() {
             onClick={() => setDrawerOpen(true)}
             style={{ padding: 4 }}
           />
-          <span style={{ color: '#fff', fontWeight: 'bold', fontSize: 17 }}>Siga Bot</span>
+          <span style={{ color: '#fff', fontWeight: 'bold', fontSize: 17 }}>Smoke</span>
         </Header>
         <Drawer
           title={<span style={{ color: '#fff' }}>Меню</span>}
@@ -99,7 +99,7 @@ export function AdminLayout() {
     <AntLayout style={{ minHeight: '100vh' }}>
       <Sider theme="dark">
         <div style={{ color: '#fff', textAlign: 'center', padding: '16px', fontWeight: 'bold', fontSize: 16 }}>
-          Siga Bot
+          Smoke
         </div>
         <Menu
           theme="dark"
