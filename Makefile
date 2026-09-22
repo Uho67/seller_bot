@@ -9,7 +9,7 @@ deploy:
 	docker compose up -d --build
 
 shell:
-	docker exec -it aroma sh
+	docker compose exec backend sh
 
 logs:
 	docker compose logs -f

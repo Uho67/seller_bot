@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_BASE_PATH: ${VITE_BASE_PATH}
-    container_name: steam_bot
+    container_name: ${CONTAINER_NAME:-flow_bot}
     restart: unless-stopped
     ports:
       - "${HOST_PORT}:${PORT}"
