@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import {
   Table, Tag, Typography, DatePicker, Select, Button, Space, Modal, Form, message,
-  Row, Col, Input, Tabs, Upload, Popconfirm,
+  Row, Col, Input, Tabs, Upload,
 } from 'antd';
-import { SendOutlined, DeleteOutlined, InboxOutlined } from '@ant-design/icons';
+import { SendOutlined, InboxOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs, { Dayjs } from 'dayjs';
 import { usersApi } from '../api/users';
@@ -101,20 +101,6 @@ function UsersList() {
       title: 'Обновлено', dataIndex: 'updated_at', key: 'updated_at', width: 110,
       render: (v: string) => new Date(v).toLocaleDateString('ru-RU'),
     },
-    {
-      title: '', key: 'actions', width: 60,
-      render: (_: any, r: any) => (
-        <Popconfirm
-          title="Удалить пользователя?"
-          okText="Да"
-          cancelText="Нет"
-          okButtonProps={{ danger: true }}
-          onConfirm={() => deleteOneMutation.mutate(r.id)}
-        >
-          <Button size="small" danger icon={<DeleteOutlined />} />
-        </Popconfirm>
-      ),
-    },
   ];
 
   const hasFilters = activeFilter !== 'all' || createdFrom || createdTo || updatedBefore || usernameFilter;
@@ -206,25 +192,6 @@ function UsersList() {
         >
           Отправить отфильтрованным ({filteredUsers.length})
         </Button>
-        {selectedIds.length > 0 && (
-          <Button
-            danger
-            icon={<DeleteOutlined />}
-            loading={deleteManyMutation.isPending}
-            onClick={confirmDeleteMany}
-          >
-            Удалить выбранных ({selectedIds.length})
-          </Button>
-        )}
-        <Button
-          danger
-          icon={<DeleteOutlined />}
-          disabled={filteredUsers.length === 0}
-          loading={deleteManyMutation.isPending}
-          onClick={confirmDeleteAll}
-        >
-          Удалить всех ({filteredUsers.length})
-        </Button>
       </Space>
 
       <Table
@@ -234,10 +201,6 @@ function UsersList() {
         loading={isLoading}
         scroll={{ x: 'max-content' }}
         size="small"
-        rowSelection={{
-          selectedRowKeys: selectedIds,
-          onChange: (keys) => setSelectedIds(keys as number[]),
-        }}
       />
 
       <Modal
