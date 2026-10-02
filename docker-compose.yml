@@ -3,10 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: flow_bot
+    container_name: podhub
     restart: unless-stopped
     ports:
-      - "3007:3007"
+      - "3010:3010"
     volumes:
       - ./backend/data:/app/data
       - ./backend/backups:/app/backups

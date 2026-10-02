@@ -18,7 +18,7 @@ export default function App() {
   return (
     <ConfigProvider locale={ukUA}>
       <AuthProvider>
-        <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || '/pachka'}>
+        <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || '/podhub'}>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route

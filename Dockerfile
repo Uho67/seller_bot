@@ -4,7 +4,7 @@ WORKDIR /admin
 COPY admin/package*.json ./
 RUN npm install --legacy-peer-deps
 COPY admin/ .
-ARG VITE_BASE_PATH=/flow
+ARG VITE_BASE_PATH=/podhub
 ENV VITE_BASE_PATH=${VITE_BASE_PATH}
 RUN npm run build
 
@@ -23,6 +23,8 @@ WORKDIR /app
 COPY --from=backend-builder /app/node_modules ./node_modules
 COPY --from=backend-builder /app/dist ./dist
 COPY --from=admin-builder /admin/dist ./public
+COPY --from=backend-builder /app/scripts ./scripts 
+COPY --from=backend-builder /app/package.json ./package.json
 RUN mkdir -p uploads data backups
-EXPOSE 3007
+EXPOSE 3010
 CMD ["node", "dist/main.js"]

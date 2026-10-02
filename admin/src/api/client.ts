@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE = import.meta.env.VITE_BASE_PATH || '/pachka';
+const BASE = import.meta.env.VITE_BASE_PATH || '/podhub';
 const client = axios.create({ baseURL: `${BASE}/api` });
 
 client.interceptors.request.use((config) => {

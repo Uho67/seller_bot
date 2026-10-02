@@ -22,7 +22,7 @@ export function ImageUpload({ currentImage, onChange }: Props) {
     return false;
   };
 
-  const base = import.meta.env.VITE_BASE_PATH || '/pachka';
+  const base = import.meta.env.VITE_BASE_PATH || '/podhub';
   const imageUrl = preview || (currentImage ? `${base}/uploads/${currentImage}` : null);
 
   return (
